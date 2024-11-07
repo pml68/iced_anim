@@ -72,3 +72,6 @@ pub use spring_motion::SpringMotion;
 
 #[cfg(feature = "derive")]
 pub use iced_anim_derive::Animate;
+
+#[cfg(feature = "highlighter")]
+pub mod highlighter;
