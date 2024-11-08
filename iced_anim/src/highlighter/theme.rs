@@ -8,8 +8,10 @@ static THEMES: Lazy<highlighting::ThemeSet> = Lazy::new(highlighting::ThemeSet::
 #[derive(Debug, Clone, PartialEq)]
 pub enum Theme {
     SolarizedDark,
+    SolarizedLight,
     Base16Mocha,
-    Base16Ocean,
+    Base16OceanDark,
+    Base16OceanLight,
     Base16Eighties,
     InspiredGitHub,
     Custom(Arc<highlighting::Theme>),
@@ -19,8 +21,10 @@ impl Theme {
     pub fn highlighter_theme(&self) -> highlighting::Theme {
         match self {
             Theme::SolarizedDark => THEMES.themes["Solarized (dark)"].clone(),
+            Theme::SolarizedLight => THEMES.themes["Solarized (light)"].clone(),
             Theme::Base16Mocha => THEMES.themes["base16-mocha.dark"].clone(),
-            Theme::Base16Ocean => THEMES.themes["base16-ocean.dark"].clone(),
+            Theme::Base16OceanDark => THEMES.themes["base16-ocean.dark"].clone(),
+            Theme::Base16OceanLight => THEMES.themes["base16-ocean.light"].clone(),
             Theme::Base16Eighties => THEMES.themes["base16-eighties.dark"].clone(),
             Theme::InspiredGitHub => THEMES.themes["InspiredGitHub"].clone(),
             Theme::Custom(custom) => highlighting::Theme::clone(&custom),
@@ -32,8 +36,10 @@ impl std::fmt::Display for Theme {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
             Theme::SolarizedDark => write!(f, "Solarized Dark"),
+            Theme::SolarizedLight => write!(f, "Solarized Light"),
             Theme::Base16Mocha => write!(f, "Mocha"),
-            Theme::Base16Ocean => write!(f, "Ocean"),
+            Theme::Base16OceanDark => write!(f, "Ocean Dark"),
+            Theme::Base16OceanLight => write!(f, "Ocean Light"),
             Theme::Base16Eighties => write!(f, "Eighties"),
             Theme::InspiredGitHub => write!(f, "Inspired GitHub"),
             Theme::Custom(custom) => write!(f, "{}", custom.name.clone().unwrap_or("".to_owned())),
