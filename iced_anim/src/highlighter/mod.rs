@@ -75,7 +75,7 @@ impl Animate for highlighting::ThemeItem {
 
 impl Animate for highlighting::Theme {
     fn components() -> usize {
-        highlighting::ThemeItem::components() * 200
+        highlighting::ThemeItem::components() * 150
     }
 
     fn update(&mut self, components: &mut impl Iterator<Item = f32>) {
