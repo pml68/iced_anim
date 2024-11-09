@@ -87,7 +87,7 @@ impl Animate for highlighting::Theme {
     }
 
     fn update(&mut self, components: &mut impl Iterator<Item = f32>) {
-        for item in &mut self.scopes {
+        for item in self.scopes.iter_mut() {
             item.update(components);
         }
         let extra =
@@ -96,10 +96,13 @@ impl Animate for highlighting::Theme {
     }
 
     fn distance_to(&self, end: &Self) -> Vec<f32> {
-        self.scopes
+        let mut distance: Vec<f32> = self
+            .scopes
             .iter()
             .zip(end.scopes.iter().take(self.scopes.len()))
             .flat_map(|(start, end)| start.distance_to(end))
-            .collect()
+            .collect();
+        distance.resize(Self::components(), 0.0);
+        distance
     }
 }
