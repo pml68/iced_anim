@@ -36,9 +36,9 @@ impl Animate for highlighting::Color {
     fn distance_to(&self, end: &Self) -> Vec<f32> {
         [
             self.r.distance_to(&end.r),
-            self.g.distance_to(&end.r),
-            self.b.distance_to(&end.r),
-            self.a.distance_to(&end.r),
+            self.g.distance_to(&end.g),
+            self.b.distance_to(&end.b),
+            self.a.distance_to(&end.a),
         ]
         .concat()
     }
