@@ -17,7 +17,7 @@ impl Animate for u8 {
     }
 
     fn distance_to(&self, end: &Self) -> Vec<f32> {
-        vec![*self as f32 - *end as f32]
+        vec![*self as f32 / 255.0 - *end as f32 / 255.0]
     }
 }
 
