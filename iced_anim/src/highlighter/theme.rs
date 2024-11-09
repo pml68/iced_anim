@@ -1,5 +1,5 @@
 use super::Animate;
-use once_cell::sync::Lazy;
+use once_cell::sync::{Lazy, OnceCell};
 use std::sync::Arc;
 use syntect::highlighting;
 
@@ -18,16 +18,19 @@ pub enum Theme {
 }
 
 impl Theme {
-    pub fn highlighter_theme(&self) -> highlighting::Theme {
+    pub fn highlighter_theme(&self) -> &'static highlighting::Theme {
         match self {
-            Theme::SolarizedDark => THEMES.themes["Solarized (dark)"].clone(),
-            Theme::SolarizedLight => THEMES.themes["Solarized (light)"].clone(),
-            Theme::Base16Mocha => THEMES.themes["base16-mocha.dark"].clone(),
-            Theme::Base16OceanDark => THEMES.themes["base16-ocean.dark"].clone(),
-            Theme::Base16OceanLight => THEMES.themes["base16-ocean.light"].clone(),
-            Theme::Base16Eighties => THEMES.themes["base16-eighties.dark"].clone(),
-            Theme::InspiredGitHub => THEMES.themes["InspiredGitHub"].clone(),
-            Theme::Custom(custom) => highlighting::Theme::clone(&custom),
+            Theme::SolarizedDark => &THEMES.themes["Solarized (dark)"],
+            Theme::SolarizedLight => &THEMES.themes["Solarized (light)"],
+            Theme::Base16Mocha => &THEMES.themes["base16-mocha.dark"],
+            Theme::Base16OceanDark => &THEMES.themes["base16-ocean.dark"],
+            Theme::Base16OceanLight => &THEMES.themes["base16-ocean.light"],
+            Theme::Base16Eighties => &THEMES.themes["base16-eighties.dark"],
+            Theme::InspiredGitHub => &THEMES.themes["InspiredGitHub"],
+            Theme::Custom(custom) => {
+                static HIGHLIGHTER_THEME: OnceCell<highlighting::Theme> = OnceCell::new();
+                HIGHLIGHTER_THEME.get_or_init(|| highlighting::Theme::clone(&custom))
+            }
         }
     }
 }
@@ -53,7 +56,7 @@ impl Animate for Theme {
     }
 
     fn update(&mut self, components: &mut impl Iterator<Item = f32>) {
-        let mut theme = self.highlighter_theme();
+        let mut theme = self.highlighter_theme().clone();
         theme.update(components);
 
         *self = Theme::Custom(Arc::new(theme));

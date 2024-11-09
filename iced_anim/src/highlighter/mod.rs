@@ -1,4 +1,8 @@
+pub mod highlighter;
 pub mod theme;
+
+pub use highlighter::{Highlight, Highlighter, Settings};
+pub use theme::Theme;
 
 use super::Animate;
 use syntect::highlighting;

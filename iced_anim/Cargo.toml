@@ -18,4 +18,4 @@ once_cell = { version = "1.0", optional = true }
 derive = ["dep:iced_anim_derive"]
 serde = ["dep:serde"]
 widgets = []
-highlighter = ["dep:syntect", "dep:once_cell", "iced/highlighter"]
+highlighter = ["dep:syntect", "dep:once_cell"]
