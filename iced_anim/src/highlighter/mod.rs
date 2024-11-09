@@ -98,7 +98,7 @@ impl Animate for highlighting::Theme {
     fn distance_to(&self, end: &Self) -> Vec<f32> {
         self.scopes
             .iter()
-            .zip(end.scopes.iter().take(self.scopes.len() * 2))
+            .zip(end.scopes.iter().take(self.scopes.len()))
             .flat_map(|(start, end)| start.distance_to(end))
             .collect()
     }
