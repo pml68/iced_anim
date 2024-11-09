@@ -27,10 +27,10 @@ impl Animate for highlighting::Color {
     }
 
     fn update(&mut self, components: &mut impl Iterator<Item = f32>) {
-        self.r = (self.r + (components.next().unwrap() * 255.0) as u8).clamp(0, 255);
-        self.g = (self.g + (components.next().unwrap() * 255.0) as u8).clamp(0, 255);
-        self.b = (self.b + (components.next().unwrap() * 255.0) as u8).clamp(0, 255);
-        self.a = (self.a + (components.next().unwrap() * 255.0) as u8).clamp(0, 255);
+        self.r = (self.r as f32 + components.next().unwrap() * 255.0).clamp(0.0, 255.0) as u8;
+        self.g = (self.g as f32 + components.next().unwrap() * 255.0).clamp(0.0, 255.0) as u8;
+        self.b = (self.b as f32 + components.next().unwrap() * 255.0).clamp(0.0, 255.0) as u8;
+        self.a = (self.a as f32 + components.next().unwrap() * 255.0).clamp(0.0, 255.0) as u8;
     }
 
     fn distance_to(&self, end: &Self) -> Vec<f32> {
