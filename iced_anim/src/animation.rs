@@ -55,7 +55,7 @@ use std::time::Instant;
 
 use iced::{
     advanced::{widget::Tree, Widget},
-    Element,
+    Element, Rectangle,
 };
 
 use crate::{Animate, Animated, Event};
@@ -172,11 +172,16 @@ where
         tree: &'b mut iced::advanced::widget::Tree,
         layout: iced::advanced::Layout<'_>,
         renderer: &Renderer,
+        viewport: &Rectangle,
         translation: iced::Vector,
     ) -> Option<iced::advanced::overlay::Element<'b, Message, Theme, Renderer>> {
-        self.content
-            .as_widget_mut()
-            .overlay(&mut tree.children[0], layout, renderer, translation)
+        self.content.as_widget_mut().overlay(
+            &mut tree.children[0],
+            layout,
+            renderer,
+            viewport,
+            translation,
+        )
     }
 
     fn layout(

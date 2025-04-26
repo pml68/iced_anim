@@ -81,7 +81,7 @@ use iced::{
         widget::{tree, Tree},
         Widget,
     },
-    Element,
+    Element, Rectangle,
 };
 
 /// A widget that implicitly animates a value anytime it changes.
@@ -243,12 +243,14 @@ where
         tree: &'b mut Tree,
         layout: layout::Layout<'_>,
         renderer: &Renderer,
+        viewport: &Rectangle,
         translation: iced::Vector,
     ) -> Option<iced::advanced::overlay::Element<'b, Message, Theme, Renderer>> {
         self.cached_element.as_widget_mut().overlay(
             &mut tree.children[0],
             layout,
             renderer,
+            viewport,
             translation,
         )
     }
