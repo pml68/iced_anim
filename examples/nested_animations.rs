@@ -109,5 +109,7 @@ impl State {
 }
 
 pub fn main() -> iced::Result {
-    iced::run("Nested AnimationBuilders", State::update, State::view)
+    iced::application(State::default, State::update, State::view)
+        .title("Nested AnimationBuilders")
+        .run()
 }

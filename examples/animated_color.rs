@@ -102,7 +102,9 @@ impl State {
 }
 
 pub fn main() -> iced::Result {
-    iced::run("Animated color", State::update, State::view)
+    iced::application(State::default, State::update, State::view)
+        .title("Animated Color")
+        .run()
 }
 
 /// Helper function to estimate the luminance of a color so we can adjust the text color.

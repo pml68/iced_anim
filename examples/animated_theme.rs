@@ -132,7 +132,8 @@ fn pair_square<'a>(name: String, pair: Pair) -> Element<'a, Message> {
 }
 
 pub fn main() -> iced::Result {
-    iced::application("Animated theme", State::update, State::view)
+    iced::application(State::default, State::update, State::view)
         .theme(|state| state.theme.value().clone())
+        .title("Animated Theme")
         .run()
 }

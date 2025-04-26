@@ -78,8 +78,9 @@ impl State {
 }
 
 pub fn main() -> iced::Result {
-    iced::application("Animated widgets", State::update, State::view)
+    iced::application(State::default, State::update, State::view)
         .theme(|_| iced::Theme::CatppuccinFrappe)
+        .title("Animated Widgets")
         .run()
 }
 

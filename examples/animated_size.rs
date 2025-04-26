@@ -65,5 +65,7 @@ impl State {
 }
 
 pub fn main() -> iced::Result {
-    iced::run("Animated size", State::update, State::view)
+    iced::application(State::default, State::update, State::view)
+        .title("Animated Size")
+        .run()
 }

@@ -181,8 +181,9 @@ fn drawer_content(count: usize) -> Element<'static, Message> {
 }
 
 pub fn main() -> iced::Result {
-    iced::application("Animated Drawer", State::update, State::view)
+    iced::application(State::default, State::update, State::view)
         .subscription(State::subscription)
+        .title("Animated Drawer")
         .run()
 }
 
@@ -293,11 +294,12 @@ where
         state: &'b mut iced::advanced::widget::Tree,
         layout: iced::advanced::Layout<'_>,
         renderer: &Renderer,
+        viewport: &Rectangle,
         translation: iced::Vector,
     ) -> Option<iced::advanced::overlay::Element<'b, Message, Theme, Renderer>> {
         self.content
             .as_widget_mut()
-            .overlay(state, layout, renderer, translation)
+            .overlay(state, layout, renderer, viewport, translation)
     }
 
     fn size_hint(&self) -> Size<Length> {

@@ -96,7 +96,8 @@ fn get_color(position: &Point, size: Size) -> Color {
 }
 
 pub fn main() -> iced::Result {
-    iced::application("Stateful Animation", State::update, State::view)
+    iced::application(State::default, State::update, State::view)
         .subscription(State::subscription)
+        .title("Stateful Animation")
         .run()
 }

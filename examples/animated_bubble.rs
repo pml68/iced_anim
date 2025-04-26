@@ -95,7 +95,8 @@ impl State {
 }
 
 pub fn main() -> iced::Result {
-    iced::application("Animated bubble", State::update, State::view)
+    iced::application(State::default, State::update, State::view)
         .subscription(State::subscription)
+        .title("Animated Bubble")
         .run()
 }

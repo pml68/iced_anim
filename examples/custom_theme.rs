@@ -62,6 +62,10 @@ impl Base for Theme {
             background_color: palette.background,
         }
     }
+
+    fn palette(&self) -> Option<iced::theme::Palette> {
+        None
+    }
 }
 
 // Implement custom catalogs for some widgets to use the custom theme.
@@ -158,7 +162,8 @@ impl State {
 }
 
 pub fn main() -> iced::Result {
-    iced::application("Custom theme", State::update, State::view)
+    iced::application(State::default, State::update, State::view)
         .theme(State::theme)
+        .title("Custom theme")
         .run()
 }

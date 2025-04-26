@@ -140,8 +140,9 @@ impl canvas::Program<Message> for AppState {
 }
 
 pub fn main() -> iced::Result {
-    iced::application("Animated canvas", AppState::update, AppState::view)
+    iced::application(AppState::default, AppState::update, AppState::view)
         .window_size(Size::new(1024.0, 768.0))
+        .title("Animated Canvas")
         .run()
 }
 

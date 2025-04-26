@@ -302,5 +302,7 @@ fn circle_color(offset: f32, is_horizontal: bool) -> iced::Color {
 }
 
 pub fn main() -> iced::Result {
-    iced::run("Preview Motion", State::update, State::view)
+    iced::application(State::default, State::update, State::view)
+        .title("Preview Motion")
+        .run()
 }
