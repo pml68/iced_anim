@@ -9,17 +9,17 @@ enum Message {
     AdjustSize(f32),
 }
 
-struct State {
+struct AnimatedSize {
     size: f32,
 }
 
-impl Default for State {
+impl Default for AnimatedSize {
     fn default() -> Self {
         Self { size: 50.0 }
     }
 }
 
-impl State {
+impl AnimatedSize {
     fn update(&mut self, message: Message) {
         match message {
             Message::AdjustSize(dx) => {
@@ -65,5 +65,5 @@ impl State {
 }
 
 pub fn main() -> iced::Result {
-    iced::run("Animated size", State::update, State::view)
+    iced::run(AnimatedSize::update, AnimatedSize::view)
 }

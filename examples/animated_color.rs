@@ -10,12 +10,12 @@ enum Message {
     ChangeColor(Color),
 }
 
-struct State {
+struct AnimatedColor {
     color: Color,
     text_color: Color,
 }
 
-impl Default for State {
+impl Default for AnimatedColor {
     fn default() -> Self {
         Self {
             color: Self::COLORS[0],
@@ -24,7 +24,7 @@ impl Default for State {
     }
 }
 
-impl State {
+impl AnimatedColor {
     /// The colors of the rainbow.
     const COLORS: [Color; 8] = [
         color!(0xFF, 0x00, 0x00), // Red
@@ -102,7 +102,7 @@ impl State {
 }
 
 pub fn main() -> iced::Result {
-    iced::run("Animated color", State::update, State::view)
+    iced::run(AnimatedColor::update, AnimatedColor::view)
 }
 
 /// Helper function to estimate the luminance of a color so we can adjust the text color.

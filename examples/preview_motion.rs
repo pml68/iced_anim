@@ -82,14 +82,14 @@ enum Message {
     ChangeCurve(PreviewEasing),
 }
 
-struct State {
+struct PreviewMotion {
     is_spring: bool,
     offset: f32,
     preview_motion: PreviewMotion,
     preview_easing: PreviewEasing,
 }
 
-impl Default for State {
+impl Default for PreviewMotion {
     fn default() -> Self {
         Self {
             is_spring: true,
@@ -100,7 +100,7 @@ impl Default for State {
     }
 }
 
-impl State {
+impl PreviewMotion {
     /// The animation mode the preview should use.
     pub fn animation_mode(&self) -> Mode {
         if self.is_spring {
@@ -111,7 +111,7 @@ impl State {
     }
 }
 
-impl State {
+impl PreviewMotion {
     fn update(&mut self, message: Message) {
         match message {
             Message::ToggleOffset => {
@@ -302,5 +302,5 @@ fn circle_color(offset: f32, is_horizontal: bool) -> iced::Color {
 }
 
 pub fn main() -> iced::Result {
-    iced::run("Preview Motion", State::update, State::view)
+    iced::run(PreviewMotion::update, PreviewMotion::view)
 }

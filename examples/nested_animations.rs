@@ -15,7 +15,7 @@ enum Message {
     ChangeColor(Event<Color>),
 }
 
-struct State {
+struct NestedAnimations {
     size: Animated<f32>,
     color: Animated<Color>,
 }
@@ -23,7 +23,7 @@ struct State {
 const CYAN: Color = Color::from_rgb(0.0, 0.8, 0.8);
 const MAGENTA: Color = Color::from_rgb(1.0, 0.0, 1.0);
 
-impl Default for State {
+impl Default for NestedAnimations {
     fn default() -> Self {
         Self {
             size: Animated::transition(50.0, Easing::EASE),
@@ -32,7 +32,7 @@ impl Default for State {
     }
 }
 
-impl State {
+impl NestedAnimations {
     fn update(&mut self, message: Message) {
         match message {
             Message::AdjustAll => {
@@ -109,5 +109,5 @@ impl State {
 }
 
 pub fn main() -> iced::Result {
-    iced::run("Nested AnimationBuilders", State::update, State::view)
+    iced::run(NestedAnimations::update, NestedAnimations::view)
 }
