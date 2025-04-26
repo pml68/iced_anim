@@ -322,28 +322,35 @@ impl Animate for palette::Danger {
 
 impl Animate for palette::Background {
     fn components() -> usize {
-        3 * palette::Pair::components()
+        5 * palette::Pair::components()
     }
 
     fn update(&mut self, components: &mut impl Iterator<Item = f32>) {
+        self.strongest.update(components);
         self.strong.update(components);
         self.base.update(components);
         self.weak.update(components);
+        self.weakest.update(components);
     }
 
     fn distance_to(&self, end: &Self) -> Vec<f32> {
         [
+            self.strongest.distance_to(&end.strongest),
             self.strong.distance_to(&end.strong),
             self.base.distance_to(&end.base),
             self.weak.distance_to(&end.weak),
+            self.weakest.distance_to(&end.weakest),
         ]
         .concat()
     }
 
     fn lerp(&mut self, start: &Self, end: &Self, progress: f32) {
+        self.strongest
+            .lerp(&start.strongest, &end.strongest, progress);
         self.strong.lerp(&start.strong, &end.strong, progress);
         self.base.lerp(&start.base, &end.base, progress);
         self.weak.lerp(&start.weak, &end.weak, progress);
+        self.weakest.lerp(&start.weakest, &end.weakest, progress);
     }
 }
 
@@ -995,7 +1002,7 @@ mod tests {
     fn background_components() {
         assert_eq!(
             iced::theme::palette::Background::components(),
-            3 * iced::theme::palette::Pair::components()
+            5 * iced::theme::palette::Pair::components()
         );
     }
 
