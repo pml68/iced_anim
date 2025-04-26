@@ -1,6 +1,8 @@
 [workspace]
 resolver = "2"
-members = ["iced_anim", "iced_anim_derive", "examples"]
+members = ["iced_anim", "iced_anim_derive"]
 
-[workspace.dependencies]
-iced = { git = "https://github.com/pml68/iced", branch = "feat/rehighlight-on-redraw", features = ["advanced", "svg"] }
+[workspace.dependencies.iced]
+git = "https://github.com/pml68/iced"
+branch = "feat/rehighlight-on-redraw"
+features = ["advanced", "svg"]
