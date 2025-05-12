@@ -170,7 +170,7 @@ where
     fn overlay<'b>(
         &'b mut self,
         tree: &'b mut iced::advanced::widget::Tree,
-        layout: iced::advanced::Layout<'_>,
+        layout: iced::advanced::Layout<'b>,
         renderer: &Renderer,
         viewport: &iced::Rectangle,
         translation: iced::Vector,
