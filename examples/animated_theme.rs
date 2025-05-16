@@ -69,6 +69,12 @@ fn palette_grid<'a>(palette: &Extended) -> Element<'a, Message> {
             palette.success.weak,
         ),
         (
+            "Warning",
+            palette.warning.strong,
+            palette.warning.base,
+            palette.warning.weak,
+        ),
+        (
             "Danger",
             palette.danger.strong,
             palette.danger.base,
