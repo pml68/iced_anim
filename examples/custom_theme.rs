@@ -142,7 +142,7 @@ impl State {
         }
     }
 
-    fn view(&self) -> Element<Message, Theme> {
+    fn view(&self) -> Element<'_, Message, Theme> {
         Animation::new(
             &self.theme,
             button(text("Change theme"))

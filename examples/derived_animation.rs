@@ -57,7 +57,7 @@ impl State {
         }
     }
 
-    fn view(&self) -> Element<Message> {
+    fn view(&self) -> Element<'_, Message> {
         let adjust_button = button(text("Adjust")).on_press(Message::Randomize);
 
         let animated_box = AnimationBuilder::new(self.rectangle.clone(), |rectangle| {

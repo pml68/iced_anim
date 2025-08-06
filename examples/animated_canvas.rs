@@ -51,7 +51,7 @@ impl Default for AppState {
 }
 
 impl AppState {
-    fn view(&self) -> Element<Message> {
+    fn view(&self) -> Element<'_, Message> {
         Animation::new(
             &self.animated_selection,
             Canvas::new(self).width(Fill).height(Fill),
