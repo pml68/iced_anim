@@ -352,7 +352,7 @@ impl Animate for palette::Danger {
 
 impl Animate for palette::Background {
     fn components() -> usize {
-        7 * palette::Pair::components()
+        8 * palette::Pair::components()
     }
 
     fn update(&mut self, components: &mut impl Iterator<Item = f32>) {
@@ -360,6 +360,7 @@ impl Animate for palette::Background {
         self.stronger.update(components);
         self.strong.update(components);
         self.base.update(components);
+        self.neutral.update(components);
         self.weak.update(components);
         self.weaker.update(components);
         self.weakest.update(components);
@@ -371,6 +372,7 @@ impl Animate for palette::Background {
             self.stronger.distance_to(&end.strong),
             self.strong.distance_to(&end.strong),
             self.base.distance_to(&end.base),
+            self.neutral.distance_to(&end.base),
             self.weak.distance_to(&end.weak),
             self.weaker.distance_to(&end.weakest),
             self.weakest.distance_to(&end.weakest),
@@ -384,6 +386,7 @@ impl Animate for palette::Background {
         self.stronger.lerp(&start.strong, &end.strong, progress);
         self.strong.lerp(&start.strong, &end.strong, progress);
         self.base.lerp(&start.base, &end.base, progress);
+        self.neutral.lerp(&start.base, &end.base, progress);
         self.weak.lerp(&start.weak, &end.weak, progress);
         self.weaker.lerp(&start.weak, &end.weak, progress);
         self.weakest.lerp(&start.weakest, &end.weakest, progress);
