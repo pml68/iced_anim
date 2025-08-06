@@ -352,7 +352,7 @@ impl Animate for palette::Danger {
 
 impl Animate for palette::Background {
     fn components() -> usize {
-        5 * palette::Pair::components()
+        7 * palette::Pair::components()
     }
 
     fn update(&mut self, components: &mut impl Iterator<Item = f32>) {
@@ -1104,12 +1104,14 @@ mod tests {
             text_color: iced::Color::BLACK,
             border: iced::Border::default(),
             shadow: iced::Shadow::default(),
+            snap: true,
         };
         let target = iced::widget::button::Style {
             background: Some(iced::Background::Color(iced::Color::WHITE)),
             text_color: iced::Color::WHITE,
             border: iced::Border::default().width(1.0),
             shadow: iced::Shadow::default(),
+            snap: true,
         };
 
         let mut spring = crate::Spring::new(style);
