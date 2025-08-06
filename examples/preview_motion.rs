@@ -129,7 +129,7 @@ impl State {
         }
     }
 
-    fn view(&self) -> Element<Message> {
+    fn view(&self) -> Element<'_, Message> {
         let radio_buttons = column![
             radio(
                 "Spring",
@@ -232,33 +232,31 @@ fn track_background<'a>(is_horizontal: bool) -> Element<'a, Message> {
 /// The circle that animates along the track.
 fn circle_track<'a>(offset: f32, is_horizontal: bool) -> Element<'a, Message> {
     if is_horizontal {
-        container(
-            Row::new()
-                .push_maybe(offset.is_sign_positive().then_some(Space::new(
-                    Length::Fixed(offset),
-                    Length::Fixed(CIRCLE_DIAMETER),
-                )))
-                .push(circle(Some(offset), is_horizontal))
-                .push_maybe(offset.is_sign_negative().then_some(Space::new(
-                    Length::Fixed(-offset),
-                    Length::Fixed(CIRCLE_DIAMETER),
-                ))),
-        )
+        container(row![
+            offset.is_sign_positive().then_some(Space::new(
+                Length::Fixed(offset),
+                Length::Fixed(CIRCLE_DIAMETER),
+            )),
+            circle(Some(offset), is_horizontal),
+            offset.is_sign_negative().then_some(Space::new(
+                Length::Fixed(-offset),
+                Length::Fixed(CIRCLE_DIAMETER),
+            )),
+        ])
         .center(Length::Fill)
         .into()
     } else {
-        container(
-            Column::new()
-                .push_maybe(offset.is_sign_positive().then_some(Space::new(
-                    Length::Fixed(CIRCLE_DIAMETER),
-                    Length::Fixed(offset),
-                )))
-                .push(circle(Some(offset), is_horizontal))
-                .push_maybe(offset.is_sign_negative().then_some(Space::new(
-                    Length::Fixed(CIRCLE_DIAMETER),
-                    Length::Fixed(-offset),
-                ))),
-        )
+        container(column![
+            offset.is_sign_positive().then_some(Space::new(
+                Length::Fixed(CIRCLE_DIAMETER),
+                Length::Fixed(offset),
+            )),
+            circle(Some(offset), is_horizontal),
+            offset.is_sign_negative().then_some(Space::new(
+                Length::Fixed(CIRCLE_DIAMETER),
+                Length::Fixed(-offset),
+            )),
+        ])
         .center(Length::Fill)
         .into()
     }

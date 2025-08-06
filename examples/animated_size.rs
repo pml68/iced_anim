@@ -28,7 +28,7 @@ impl State {
         }
     }
 
-    fn view(&self) -> Element<Message> {
+    fn view(&self) -> Element<'_, Message> {
         let buttons = row![
             button(text("-150")).on_press(Message::AdjustSize(-150.0)),
             button(text("-50")).on_press(Message::AdjustSize(-50.0)),

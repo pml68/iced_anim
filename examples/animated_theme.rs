@@ -22,7 +22,7 @@ impl State {
         }
     }
 
-    fn view(&self) -> Element<Message> {
+    fn view(&self) -> Element<'_, Message> {
         Animation::new(
             &self.theme,
             container(

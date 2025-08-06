@@ -54,7 +54,7 @@ impl State {
         }
     }
 
-    fn view(&self) -> Element<Message> {
+    fn view(&self) -> Element<'_, Message> {
         let buttons = Row::with_children(Self::COLORS.iter().cloned().map(|color| {
             button(text(""))
                 .style(move |_, _| iced::widget::button::Style {

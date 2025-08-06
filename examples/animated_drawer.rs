@@ -61,7 +61,7 @@ impl State {
         })
     }
 
-    fn view(&self) -> Element<Message> {
+    fn view(&self) -> Element<'_, Message> {
         let drawer_button =
             container(button(text("Open Drawer")).on_press(Message::ToggleDrawer)).padding(8);
         drawer(
