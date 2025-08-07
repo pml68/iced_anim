@@ -1,5 +1,5 @@
 use iced::{
-    theme::palette::{Extended, Pair},
+    theme::palette::{self, Extended, Pair},
     widget::{column, container, pick_list, row, text, tooltip, Row, Space},
     Border, Element, Length, Theme,
 };
@@ -30,7 +30,21 @@ impl State {
                     pick_list(Theme::ALL, Some(self.theme.target().clone()), |theme| {
                         Message::ChangeTheme(theme.into())
                     }),
-                    palette_grid(self.theme.value().extended_palette()),
+                    column![
+                        column![
+                            text("Palette colors").size(20),
+                            palette_grid(self.theme.value().extended_palette()),
+                        ]
+                        .spacing(4),
+                        column![
+                            text("Background colors").size(20),
+                            background_palette_grid(
+                                &self.theme.value().extended_palette().background
+                            ),
+                        ]
+                        .spacing(4),
+                    ]
+                    .spacing(16)
                 ]
                 .spacing(8),
             )
@@ -80,12 +94,6 @@ fn palette_grid<'a>(palette: &Extended) -> Element<'a, Message> {
             palette.danger.base,
             palette.danger.weak,
         ),
-        (
-            "Background",
-            palette.background.strong,
-            palette.background.base,
-            palette.background.weak,
-        ),
     ];
 
     container(Row::with_children(shades.map(
@@ -98,6 +106,33 @@ fn palette_grid<'a>(palette: &Extended) -> Element<'a, Message> {
             .into()
         },
     )))
+    .padding(1.0)
+    .style(|theme: &iced::Theme| container::Style {
+        border: Border {
+            color: theme.palette().text,
+            width: 1.0,
+            ..Default::default()
+        },
+        ..Default::default()
+    })
+    .into()
+}
+
+fn background_palette_grid(background: &palette::Background) -> Element<'_, Message> {
+    container(column![
+        row![
+            pair_square("Weak Background".to_string(), background.weak),
+            pair_square("Weaker Background".to_string(), background.weaker),
+            pair_square("Weakest Background".to_string(), background.weakest),
+            pair_square("Base Background".to_string(), background.base),
+        ],
+        row![
+            pair_square("Neutral Background".to_string(), background.neutral),
+            pair_square("Strong Background".to_string(), background.strong),
+            pair_square("Stronger Background".to_string(), background.stronger),
+            pair_square("Strongest Background".to_string(), background.strongest),
+        ],
+    ])
     .padding(1.0)
     .style(|theme: &iced::Theme| container::Style {
         border: Border {
