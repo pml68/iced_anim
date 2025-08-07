@@ -1045,7 +1045,7 @@ mod tests {
     fn background_components() {
         assert_eq!(
             iced::theme::palette::Background::components(),
-            5 * iced::theme::palette::Pair::components()
+            8 * iced::theme::palette::Pair::components()
         );
     }
 
