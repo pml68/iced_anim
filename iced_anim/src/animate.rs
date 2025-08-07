@@ -369,12 +369,12 @@ impl Animate for palette::Background {
     fn distance_to(&self, end: &Self) -> Vec<f32> {
         [
             self.strongest.distance_to(&end.strongest),
-            self.stronger.distance_to(&end.strong),
+            self.stronger.distance_to(&end.stronger),
             self.strong.distance_to(&end.strong),
             self.base.distance_to(&end.base),
-            self.neutral.distance_to(&end.base),
+            self.neutral.distance_to(&end.neutral),
             self.weak.distance_to(&end.weak),
-            self.weaker.distance_to(&end.weakest),
+            self.weaker.distance_to(&end.weaker),
             self.weakest.distance_to(&end.weakest),
         ]
         .concat()
@@ -383,12 +383,12 @@ impl Animate for palette::Background {
     fn lerp(&mut self, start: &Self, end: &Self, progress: f32) {
         self.strongest
             .lerp(&start.strongest, &end.strongest, progress);
-        self.stronger.lerp(&start.strong, &end.strong, progress);
+        self.stronger.lerp(&start.stronger, &end.stronger, progress);
         self.strong.lerp(&start.strong, &end.strong, progress);
         self.base.lerp(&start.base, &end.base, progress);
-        self.neutral.lerp(&start.base, &end.base, progress);
+        self.neutral.lerp(&start.neutral, &end.neutral, progress);
         self.weak.lerp(&start.weak, &end.weak, progress);
-        self.weaker.lerp(&start.weak, &end.weak, progress);
+        self.weaker.lerp(&start.weaker, &end.weaker, progress);
         self.weakest.lerp(&start.weakest, &end.weakest, progress);
     }
 }
