@@ -193,7 +193,7 @@ where
         tree::Tag::of::<State<T>>()
     }
 
-    fn diff(&self, tree: &mut Tree) {
+    fn diff(&mut self, tree: &mut Tree) {
         // Update the spring's target if it has changed
         let state = tree.state.downcast_mut::<State<T>>();
         if state.animation.target() != &self.target {
@@ -209,28 +209,28 @@ where
             state.animation.apply(self.mode);
         }
 
-        tree.diff_children(std::slice::from_ref(&self.cached_element));
+        tree.diff_children(std::slice::from_mut(&mut self.cached_element));
     }
 
     fn layout(
-        &self,
+        &mut self,
         tree: &mut Tree,
         renderer: &Renderer,
         limits: &layout::Limits,
     ) -> layout::Node {
         self.cached_element
-            .as_widget()
+            .as_widget_mut()
             .layout(&mut tree.children[0], renderer, limits)
     }
 
     fn operate(
-        &self,
+        &mut self,
         state: &mut Tree,
         layout: layout::Layout<'_>,
         renderer: &Renderer,
         operation: &mut dyn iced::advanced::widget::Operation<()>,
     ) {
-        self.cached_element.as_widget().operate(
+        self.cached_element.as_widget_mut().operate(
             &mut state.children[0],
             layout,
             renderer,

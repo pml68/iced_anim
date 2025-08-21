@@ -232,8 +232,8 @@ where
         self.content.as_widget().children()
     }
 
-    fn diff(&self, tree: &mut iced::advanced::widget::Tree) {
-        self.content.as_widget().diff(tree);
+    fn diff(&mut self, tree: &mut iced::advanced::widget::Tree) {
+        self.content.as_widget_mut().diff(tree);
     }
 
     fn mouse_interaction(
@@ -250,13 +250,13 @@ where
     }
 
     fn layout(
-        &self,
+        &mut self,
         tree: &mut iced::advanced::widget::Tree,
         renderer: &Renderer,
         limits: &iced::advanced::layout::Limits,
     ) -> iced::advanced::layout::Node {
         self.content
-            .as_widget()
+            .as_widget_mut()
             .layout(tree, renderer, limits)
             .translate(Vector::new(self.offset.x, self.offset.y))
     }
@@ -278,14 +278,14 @@ where
     }
 
     fn operate(
-        &self,
+        &mut self,
         state: &mut iced::advanced::widget::Tree,
         layout: iced::advanced::Layout<'_>,
         renderer: &Renderer,
         operation: &mut dyn iced::advanced::widget::Operation<()>,
     ) {
         self.content
-            .as_widget()
+            .as_widget_mut()
             .operate(state, layout, renderer, operation);
     }
 
