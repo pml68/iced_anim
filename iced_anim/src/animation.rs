@@ -130,8 +130,8 @@ where
         vec![Tree::new(&self.content)]
     }
 
-    fn diff(&mut self, tree: &mut iced::advanced::widget::Tree) {
-        tree.diff_children(std::slice::from_mut(&mut self.content));
+    fn diff(&self, tree: &mut iced::advanced::widget::Tree) {
+        tree.diff_children(std::slice::from_ref(&self.content));
     }
 
     fn mouse_interaction(

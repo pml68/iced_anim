@@ -205,11 +205,11 @@ where
         vec![Tree::new(&self.content)]
     }
 
-    fn diff(&mut self, tree: &mut Tree) {
+    fn diff(&self, tree: &mut Tree) {
         // If the style changes from outside, then immediately update the style.
         let state = tree.state.downcast_mut::<State>();
         state.animated_state.diff(self.mode);
-        tree.diff_children(std::slice::from_mut(&mut self.content));
+        tree.diff_children(std::slice::from_ref(&self.content));
     }
 
     fn size(&self) -> Size<Length> {
