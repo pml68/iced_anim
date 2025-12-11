@@ -81,7 +81,7 @@ use iced::{
         widget::{tree, Tree},
         Widget,
     },
-    Element, Rectangle,
+    Element, Length, Rectangle, Size,
 };
 
 /// A widget that implicitly animates a value anytime it changes.
@@ -178,8 +178,19 @@ where
     T: 'static + Animate,
     Renderer: iced::advanced::Renderer,
 {
-    fn size(&self) -> iced::Size<iced::Length> {
-        self.cached_element.as_widget().size()
+    fn size(&self) -> Size<Length> {
+        let size = self.cached_element.as_widget().size();
+        if size.is_void() {
+            // This tries to avoid issues with void sizes not rendering in columns/rows/stacks
+            // when the animation would set the size to zero. If this is causing problems, file
+            // an issue with a minimal reproducible example or bring it up in the Iced Discord.
+            //
+            // Without this, animating from a non-zero size to zero size will cause the element to
+            // disappear entirely instead of animating down to zero size.
+            Size::new(Length::Shrink, Length::Shrink)
+        } else {
+            size
+        }
     }
 
     fn state(&self) -> tree::State {
