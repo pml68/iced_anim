@@ -35,7 +35,7 @@ impl State {
         };
     }
 
-    fn view(&self) -> Element<'_, Message> {
+    fn view(&self) -> Element<Message> {
         let is_enabled = !self.is_disabled;
         container(
             column![
@@ -66,7 +66,9 @@ impl State {
                         damping: Motion::SMOOTH.damping(),
                     })
                     .style(rainbow_style),
-                checkbox("Disable Buttons", self.is_disabled).on_toggle(Message::DisableButtons)
+                checkbox(self.is_disabled)
+                    .label("Disabled Buttons")
+                    .on_toggle(Message::DisableButtons)
             ]
             .align_x(Center)
             .spacing(8)
@@ -79,7 +81,7 @@ impl State {
 
 pub fn main() -> iced::Result {
     iced::application(State::default, State::update, State::view)
-        .theme(|_| iced::Theme::CatppuccinFrappe)
+        .theme(|_: &State| iced::Theme::CatppuccinFrappe)
         .title("Animated Widgets")
         .run()
 }

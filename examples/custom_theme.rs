@@ -66,6 +66,29 @@ impl Base for Theme {
     fn palette(&self) -> Option<iced::theme::Palette> {
         None
     }
+
+    fn default(preference: iced::theme::Mode) -> Self {
+        match preference {
+            iced::theme::Mode::Light | iced::theme::Mode::None => Theme::Light,
+            iced::theme::Mode::Dark => Theme::Dark,
+        }
+    }
+
+    fn mode(&self) -> iced::theme::Mode {
+        match self {
+            Theme::Light => iced::theme::Mode::Light,
+            Theme::Dark => iced::theme::Mode::Dark,
+            Theme::Custom(_) => iced::theme::Mode::None,
+        }
+    }
+
+    fn name(&self) -> &str {
+        match self {
+            Theme::Light => "Light",
+            Theme::Dark => "Dark",
+            Theme::Custom(_) => "Custom",
+        }
+    }
 }
 
 // Implement custom catalogs for some widgets to use the custom theme.

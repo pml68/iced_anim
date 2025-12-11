@@ -1,7 +1,7 @@
 use std::time::Duration;
 
 use iced::{
-    widget::{container, MouseArea, Space},
+    widget::{container, space, MouseArea},
     Border, Color, Element, Length, Padding, Point, Size, Subscription, Theme,
 };
 use iced_anim::{spring::Motion, AnimationBuilder};
@@ -62,7 +62,7 @@ impl State {
             AnimationBuilder::new(self.position, move |position| {
                 MouseArea::new(
                     container(
-                        container(Space::new(Length::Fill, Length::Fill))
+                        container(space().width(Length::Fill).height(Length::Fill))
                             .width(Length::Fixed(BUBBLE_SIZE))
                             .height(Length::Fixed(BUBBLE_SIZE))
                             .style(move |_: &Theme| iced::widget::container::Style {

@@ -1,6 +1,6 @@
 use iced::{
     advanced::Widget,
-    widget::{button, column, container, horizontal_space, row, text, Space, Stack},
+    widget::{button, column, container, row, space, text, Stack},
     Border, Color, Element,
     Length::{self, Fill},
     Padding, Point, Rectangle, Size, Subscription, Theme, Vector,
@@ -102,12 +102,15 @@ fn drawer<'a>(
             // Underlay
             animation_builder((background, width), move |(background, width)| {
                 container(
-                    button(container(Space::new(Length::Fill, Length::Fill)).center(Length::Fill))
-                        .on_press_maybe(is_open.then_some(Message::ToggleDrawer))
-                        .style(move |_, _| iced::widget::button::Style {
-                            background: Some(background.into()),
-                            ..Default::default()
-                        }),
+                    button(
+                        container(space().width(Length::Fill).height(Length::Fill))
+                            .center(Length::Fill),
+                    )
+                    .on_press_maybe(is_open.then_some(Message::ToggleDrawer))
+                    .style(move |_, _| button::Style {
+                        background: Some(background.into()),
+                        ..Default::default()
+                    }),
                 )
                 .padding(Padding::new(0.0).right(width + PADDING))
                 .into()
@@ -156,7 +159,7 @@ fn drawer<'a>(
 fn drawer_content(count: usize) -> Element<'static, Message> {
     column![
         row![
-            horizontal_space(),
+            space::horizontal(),
             container(text("Drawer Title").size(18)).width(Length::Fill),
             button(text("Close ›").shaping(text::Shaping::Advanced))
                 .on_press(Message::ToggleDrawer)

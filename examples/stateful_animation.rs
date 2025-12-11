@@ -5,7 +5,7 @@
 use std::time::Duration;
 
 use iced::{
-    widget::{container, mouse_area, Space},
+    widget::{container, mouse_area, space},
     Border, Color, Element,
     Length::{self, Fill},
     Point, Size, Subscription, Theme,
@@ -63,7 +63,7 @@ impl State {
                 Animation::new(
                     &self.position,
                     container(
-                        container(Space::new(Length::Fill, Length::Fill))
+                        container(space().width(Length::Fill).height(Length::Fill))
                             .width(self.position.value().x)
                             .height(self.position.value().y)
                             .style(move |_: &Theme| container::Style {

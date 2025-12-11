@@ -260,6 +260,7 @@ where
                     opacity: self.opacity,
                 },
                 drawing_bounds,
+                bounds,
             );
         };
 
