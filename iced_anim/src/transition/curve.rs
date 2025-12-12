@@ -1,7 +1,7 @@
 use super::bezier::{Bezier, EASE, EASE_IN, EASE_IN_OUT, EASE_OUT};
 
 /// A curve that describes how a transition should progress.
-#[derive(Debug, Clone, Copy, Default, PartialEq)]
+#[derive(Debug, Clone, Copy, Default)]
 pub enum Curve {
     /// A linear curve where the value changes at a constant rate.
     #[default]
@@ -33,6 +33,23 @@ impl Curve {
             Curve::EaseInOut => EASE_IN_OUT.solve(progress),
             Curve::Bezier(bezier) => bezier.solve(progress),
             Curve::Custom(f) => f(progress),
+        }
+    }
+}
+
+impl PartialEq for Curve {
+    fn eq(&self, other: &Self) -> bool {
+        match (self, other) {
+            (Curve::Linear, Curve::Linear) => true,
+            (Curve::Ease, Curve::Ease) => true,
+            (Curve::EaseIn, Curve::EaseIn) => true,
+            (Curve::EaseOut, Curve::EaseOut) => true,
+            (Curve::EaseInOut, Curve::EaseInOut) => true,
+            (Curve::Bezier(a), Curve::Bezier(b)) => a == b,
+            // This isn't a perfect comparison but should be good enough for most cases.
+            // You might see issues if comparing custom curves across multiple codegen units
+            (Curve::Custom(a), Curve::Custom(b)) => std::ptr::fn_addr_eq(*a, *b),
+            _ => false,
         }
     }
 }
