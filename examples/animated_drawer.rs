@@ -1,6 +1,6 @@
 use iced::{
     advanced::Widget,
-    widget::{button, column, container, horizontal_space, row, text, Space, Stack},
+    widget::{button, column, container, row, space, text, Stack},
     Border, Color, Element,
     Length::{self, Fill},
     Padding, Point, Rectangle, Size, Subscription, Theme, Vector,
@@ -61,7 +61,7 @@ impl State {
         })
     }
 
-    fn view(&self) -> Element<Message> {
+    fn view(&self) -> Element<'_, Message> {
         let drawer_button =
             container(button(text("Open Drawer")).on_press(Message::ToggleDrawer)).padding(8);
         drawer(
@@ -102,12 +102,15 @@ fn drawer<'a>(
             // Underlay
             animation_builder((background, width), move |(background, width)| {
                 container(
-                    button(container(Space::new(Length::Fill, Length::Fill)).center(Length::Fill))
-                        .on_press_maybe(is_open.then_some(Message::ToggleDrawer))
-                        .style(move |_, _| iced::widget::button::Style {
-                            background: Some(background.into()),
-                            ..Default::default()
-                        }),
+                    button(
+                        container(space().width(Length::Fill).height(Length::Fill))
+                            .center(Length::Fill),
+                    )
+                    .on_press_maybe(is_open.then_some(Message::ToggleDrawer))
+                    .style(move |_, _| button::Style {
+                        background: Some(background.into()),
+                        ..Default::default()
+                    }),
                 )
                 .padding(Padding::new(0.0).right(width + PADDING))
                 .into()
@@ -156,7 +159,7 @@ fn drawer<'a>(
 fn drawer_content(count: usize) -> Element<'static, Message> {
     column![
         row![
-            horizontal_space(),
+            space::horizontal(),
             container(text("Drawer Title").size(18)).width(Length::Fill),
             button(text("Close ›").shaping(text::Shaping::Advanced))
                 .on_press(Message::ToggleDrawer)
@@ -181,8 +184,9 @@ fn drawer_content(count: usize) -> Element<'static, Message> {
 }
 
 pub fn main() -> iced::Result {
-    iced::application("Animated Drawer", State::update, State::view)
+    iced::application(State::default, State::update, State::view)
         .subscription(State::subscription)
+        .title("Animated Drawer")
         .run()
 }
 
@@ -249,55 +253,56 @@ where
     }
 
     fn layout(
-        &self,
+        &mut self,
         tree: &mut iced::advanced::widget::Tree,
         renderer: &Renderer,
         limits: &iced::advanced::layout::Limits,
     ) -> iced::advanced::layout::Node {
         self.content
-            .as_widget()
+            .as_widget_mut()
             .layout(tree, renderer, limits)
             .translate(Vector::new(self.offset.x, self.offset.y))
     }
 
-    fn on_event(
+    fn update(
         &mut self,
         state: &mut iced::advanced::widget::Tree,
-        event: iced::Event,
+        event: &iced::Event,
         layout: iced::advanced::Layout<'_>,
         cursor: iced::advanced::mouse::Cursor,
         renderer: &Renderer,
         clipboard: &mut dyn iced::advanced::Clipboard,
         shell: &mut iced::advanced::Shell<'_, Message>,
         viewport: &iced::Rectangle,
-    ) -> iced::advanced::graphics::core::event::Status {
-        self.content.as_widget_mut().on_event(
+    ) {
+        self.content.as_widget_mut().update(
             state, event, layout, cursor, renderer, clipboard, shell, viewport,
-        )
+        );
     }
 
     fn operate(
-        &self,
+        &mut self,
         state: &mut iced::advanced::widget::Tree,
         layout: iced::advanced::Layout<'_>,
         renderer: &Renderer,
         operation: &mut dyn iced::advanced::widget::Operation<()>,
     ) {
         self.content
-            .as_widget()
+            .as_widget_mut()
             .operate(state, layout, renderer, operation);
     }
 
     fn overlay<'b>(
         &'b mut self,
         state: &'b mut iced::advanced::widget::Tree,
-        layout: iced::advanced::Layout<'_>,
+        layout: iced::advanced::Layout<'b>,
         renderer: &Renderer,
+        viewport: &Rectangle,
         translation: iced::Vector,
     ) -> Option<iced::advanced::overlay::Element<'b, Message, Theme, Renderer>> {
         self.content
             .as_widget_mut()
-            .overlay(state, layout, renderer, translation)
+            .overlay(state, layout, renderer, viewport, translation)
     }
 
     fn size_hint(&self) -> Size<Length> {

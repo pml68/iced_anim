@@ -1,5 +1,5 @@
 use iced::{
-    widget::{button, column, container, pick_list, radio, row, stack, text, Column, Row, Space},
+    widget::{button, column, container, pick_list, radio, row, space, stack, text, Column, Row},
     Alignment::Center,
     Border, Element, Length,
 };
@@ -129,7 +129,7 @@ impl State {
         }
     }
 
-    fn view(&self) -> Element<Message> {
+    fn view(&self) -> Element<'_, Message> {
         let radio_buttons = column![
             radio(
                 "Spring",
@@ -207,9 +207,9 @@ fn track_background<'a>(is_horizontal: bool) -> Element<'a, Message> {
         Length::Fill
     };
     let spacer = if is_horizontal {
-        Space::with_width(MAX_OFFSET - CIRCLE_DIAMETER)
+        space().width(MAX_OFFSET - CIRCLE_DIAMETER)
     } else {
-        Space::with_height(MAX_OFFSET - CIRCLE_DIAMETER)
+        space().height(MAX_OFFSET - CIRCLE_DIAMETER)
     };
 
     let track_items = vec![
@@ -232,33 +232,35 @@ fn track_background<'a>(is_horizontal: bool) -> Element<'a, Message> {
 /// The circle that animates along the track.
 fn circle_track<'a>(offset: f32, is_horizontal: bool) -> Element<'a, Message> {
     if is_horizontal {
-        container(
-            Row::new()
-                .push_maybe(offset.is_sign_positive().then_some(Space::new(
-                    Length::Fixed(offset),
-                    Length::Fixed(CIRCLE_DIAMETER),
-                )))
-                .push(circle(Some(offset), is_horizontal))
-                .push_maybe(offset.is_sign_negative().then_some(Space::new(
-                    Length::Fixed(-offset),
-                    Length::Fixed(CIRCLE_DIAMETER),
-                ))),
-        )
+        container(row![
+            offset.is_sign_positive().then_some(
+                space()
+                    .width(Length::Fixed(offset))
+                    .height(Length::Fixed(CIRCLE_DIAMETER))
+            ),
+            circle(Some(offset), is_horizontal),
+            offset.is_sign_negative().then_some(
+                space()
+                    .width(Length::Fixed(-offset))
+                    .height(Length::Fixed(CIRCLE_DIAMETER))
+            ),
+        ])
         .center(Length::Fill)
         .into()
     } else {
-        container(
-            Column::new()
-                .push_maybe(offset.is_sign_positive().then_some(Space::new(
-                    Length::Fixed(CIRCLE_DIAMETER),
-                    Length::Fixed(offset),
-                )))
-                .push(circle(Some(offset), is_horizontal))
-                .push_maybe(offset.is_sign_negative().then_some(Space::new(
-                    Length::Fixed(CIRCLE_DIAMETER),
-                    Length::Fixed(-offset),
-                ))),
-        )
+        container(column![
+            offset.is_sign_positive().then_some(
+                space()
+                    .width(Length::Fixed(CIRCLE_DIAMETER))
+                    .height(Length::Fixed(offset))
+            ),
+            circle(Some(offset), is_horizontal),
+            offset.is_sign_negative().then_some(
+                space()
+                    .width(Length::Fixed(CIRCLE_DIAMETER))
+                    .height(Length::Fixed(-offset))
+            ),
+        ])
         .center(Length::Fill)
         .into()
     }
@@ -266,7 +268,7 @@ fn circle_track<'a>(offset: f32, is_horizontal: bool) -> Element<'a, Message> {
 
 /// A circle that animates along the track or a background circle.
 fn circle<'a>(offset: Option<f32>, is_horizontal: bool) -> Element<'a, Message> {
-    container(Space::new(Length::Fill, Length::Fill))
+    container(space().width(Length::Fill).height(Length::Fill))
         .style(move |theme: &iced::Theme| {
             let color = if let Some(offset) = offset {
                 circle_color(offset, is_horizontal)
@@ -302,5 +304,7 @@ fn circle_color(offset: f32, is_horizontal: bool) -> iced::Color {
 }
 
 pub fn main() -> iced::Result {
-    iced::run("Preview Motion", State::update, State::view)
+    iced::application(State::default, State::update, State::view)
+        .title("Preview Motion")
+        .run()
 }

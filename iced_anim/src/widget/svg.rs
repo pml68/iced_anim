@@ -178,7 +178,7 @@ where
     }
 
     fn layout(
-        &self,
+        &mut self,
         _tree: &mut Tree,
         renderer: &Renderer,
         limits: &layout::Limits,
@@ -260,6 +260,7 @@ where
                     opacity: self.opacity,
                 },
                 drawing_bounds,
+                bounds,
             );
         };
 
@@ -270,31 +271,29 @@ where
         }
     }
 
-    fn on_event(
+    fn update(
         &mut self,
         tree: &mut Tree,
-        event: iced::Event,
+        event: &iced::Event,
         layout: Layout<'_>,
         cursor: iced::advanced::mouse::Cursor,
         _renderer: &Renderer,
         _clipboard: &mut dyn iced::advanced::Clipboard,
         shell: &mut iced::advanced::Shell<'_, Message>,
         _viewport: &Rectangle,
-    ) -> iced::advanced::graphics::core::event::Status {
+    ) {
         // Redraw anytime the status changes and would trigger a style change.
         let state = tree.state.downcast_mut::<State>();
         let status = self.get_status(cursor, layout);
         let needs_redraw = state.animated_state.needs_redraw(status);
 
         if needs_redraw {
-            shell.request_redraw(window::RedrawRequest::NextFrame);
+            shell.request_redraw();
         }
 
         if let Event::Window(window::Event::RedrawRequested(now)) = event {
-            state.animated_state.tick(now);
+            state.animated_state.tick(*now);
         }
-
-        iced::event::Status::Ignored
     }
 }
 

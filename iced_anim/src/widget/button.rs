@@ -6,7 +6,6 @@ use iced::{
         widget::{tree, Operation, Tree},
         Clipboard, Layout, Shell, Widget,
     },
-    event,
     mouse::{self, Cursor},
     overlay, touch, window, Background, Color, Element, Event, Length, Padding, Rectangle, Size,
     Vector,
@@ -221,27 +220,28 @@ where
     }
 
     fn layout(
-        &self,
+        &mut self,
         tree: &mut Tree,
         renderer: &Renderer,
         limits: &layout::Limits,
     ) -> layout::Node {
         layout::padded(limits, self.width, self.height, self.padding, |limits| {
             self.content
-                .as_widget()
+                .as_widget_mut()
                 .layout(&mut tree.children[0], renderer, limits)
         })
     }
 
     fn operate(
-        &self,
+        &mut self,
         tree: &mut Tree,
         layout: Layout<'_>,
         renderer: &Renderer,
         operation: &mut dyn Operation,
     ) {
-        operation.container(None, layout.bounds(), &mut |operation| {
-            self.content.as_widget().operate(
+        operation.container(None, layout.bounds());
+        operation.traverse(&mut |operation| {
+            self.content.as_widget_mut().operate(
                 &mut tree.children[0],
                 layout.children().next().unwrap(),
                 renderer,
@@ -250,28 +250,30 @@ where
         });
     }
 
-    fn on_event(
+    fn update(
         &mut self,
         tree: &mut Tree,
-        event: Event,
+        event: &Event,
         layout: Layout<'_>,
         cursor: mouse::Cursor,
         renderer: &Renderer,
         clipboard: &mut dyn Clipboard,
         shell: &mut Shell<'_, Message>,
         viewport: &Rectangle,
-    ) -> event::Status {
-        if let event::Status::Captured = self.content.as_widget_mut().on_event(
+    ) {
+        self.content.as_widget_mut().update(
             &mut tree.children[0],
-            event.clone(),
+            event,
             layout.children().next().unwrap(),
             cursor,
             renderer,
             clipboard,
             shell,
             viewport,
-        ) {
-            return event::Status::Captured;
+        );
+
+        if shell.is_event_captured() {
+            return;
         }
 
         // Redraw anytime the status changes and would trigger a style change.
@@ -280,12 +282,12 @@ where
         let needs_redraw = state.animated_state.needs_redraw(status);
 
         if needs_redraw {
-            shell.request_redraw(window::RedrawRequest::NextFrame);
+            shell.request_redraw();
         }
 
         match event {
             Event::Window(window::Event::RedrawRequested(now)) => {
-                state.animated_state.tick(now);
+                state.animated_state.tick(*now);
             }
             Event::Mouse(mouse::Event::ButtonPressed(mouse::Button::Left))
             | Event::Touch(touch::Event::FingerPressed { .. }) => {
@@ -296,9 +298,9 @@ where
                         let state = tree.state.downcast_mut::<State>();
 
                         state.is_pressed = true;
-                        shell.request_redraw(window::RedrawRequest::NextFrame);
+                        shell.request_redraw();
 
-                        return event::Status::Captured;
+                        shell.capture_event();
                     }
                 }
             }
@@ -309,7 +311,7 @@ where
 
                     if state.is_pressed {
                         state.is_pressed = false;
-                        shell.request_redraw(window::RedrawRequest::NextFrame);
+                        shell.request_redraw();
 
                         let bounds = layout.bounds();
 
@@ -317,20 +319,18 @@ where
                             shell.publish(on_press);
                         }
 
-                        return event::Status::Captured;
+                        shell.capture_event();
                     }
                 }
             }
             Event::Touch(touch::Event::FingerLost { .. }) => {
                 let state = tree.state.downcast_mut::<State>();
-                shell.request_redraw(window::RedrawRequest::NextFrame);
+                shell.request_redraw();
 
                 state.is_pressed = false;
             }
             _ => {}
         }
-
-        event::Status::Ignored
     }
 
     fn draw(
@@ -357,6 +357,7 @@ where
                     bounds,
                     border: style.border,
                     shadow: style.shadow,
+                    snap: style.snap,
                 },
                 style
                     .background
@@ -403,14 +404,16 @@ where
     fn overlay<'b>(
         &'b mut self,
         tree: &'b mut Tree,
-        layout: Layout<'_>,
+        layout: Layout<'b>,
         renderer: &Renderer,
+        viewport: &Rectangle,
         translation: Vector,
     ) -> Option<overlay::Element<'b, Message, Theme, Renderer>> {
         self.content.as_widget_mut().overlay(
             &mut tree.children[0],
             layout.children().next().unwrap(),
             renderer,
+            viewport,
             translation,
         )
     }

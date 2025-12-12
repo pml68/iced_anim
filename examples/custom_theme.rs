@@ -1,6 +1,6 @@
 //! An example animating a custom theme palette.
 use iced::{
-    daemon::DefaultStyle,
+    theme::Base,
     widget::{button, text},
     Border, Color, Element,
 };
@@ -54,12 +54,39 @@ impl Animate for Theme {
 }
 
 // A default daemon style for the custom theme.
-impl DefaultStyle for Theme {
-    fn default_style(&self) -> iced::daemon::Appearance {
+impl Base for Theme {
+    fn base(&self) -> iced::theme::Style {
         let palette = self.palette();
-        iced::daemon::Appearance {
+        iced::theme::Style {
             text_color: palette.text,
             background_color: palette.background,
+        }
+    }
+
+    fn palette(&self) -> Option<iced::theme::Palette> {
+        None
+    }
+
+    fn default(preference: iced::theme::Mode) -> Self {
+        match preference {
+            iced::theme::Mode::Light | iced::theme::Mode::None => Theme::Light,
+            iced::theme::Mode::Dark => Theme::Dark,
+        }
+    }
+
+    fn mode(&self) -> iced::theme::Mode {
+        match self {
+            Theme::Light => iced::theme::Mode::Light,
+            Theme::Dark => iced::theme::Mode::Dark,
+            Theme::Custom(_) => iced::theme::Mode::None,
+        }
+    }
+
+    fn name(&self) -> &str {
+        match self {
+            Theme::Light => "Light",
+            Theme::Dark => "Dark",
+            Theme::Custom(_) => "Custom",
         }
     }
 }
@@ -138,7 +165,7 @@ impl State {
         }
     }
 
-    fn view(&self) -> Element<Message, Theme> {
+    fn view(&self) -> Element<'_, Message, Theme> {
         Animation::new(
             &self.theme,
             button(text("Change theme"))
@@ -158,7 +185,8 @@ impl State {
 }
 
 pub fn main() -> iced::Result {
-    iced::application("Custom theme", State::update, State::view)
+    iced::application(State::default, State::update, State::view)
         .theme(State::theme)
+        .title("Custom theme")
         .run()
 }

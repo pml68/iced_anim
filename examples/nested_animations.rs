@@ -58,7 +58,7 @@ impl State {
         }
     }
 
-    fn view(&self) -> Element<Message> {
+    fn view(&self) -> Element<'_, Message> {
         let buttons = row![
             button(text("Adjust size")).on_press(Message::ChangeSize(
                 if *self.size.target() == 50.0 {
@@ -109,5 +109,7 @@ impl State {
 }
 
 pub fn main() -> iced::Result {
-    iced::run("Nested AnimationBuilders", State::update, State::view)
+    iced::application(State::default, State::update, State::view)
+        .title("Nested AnimationBuilders")
+        .run()
 }

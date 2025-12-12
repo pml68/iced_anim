@@ -1,49 +1,81 @@
+use std::time::Duration;
+
 use iced::{
-    theme::palette::{Extended, Pair},
-    widget::{column, container, pick_list, row, text, tooltip, Row, Space},
+    theme::palette::{self, Extended, Pair},
+    widget::{column, container, pick_list, row, space, text, tooltip, Row},
     Border, Element, Length, Theme,
 };
-use iced_anim::{Animated, Animation, Event};
+use iced_anim::{Animated, Animation, Easing, Event};
 
 #[derive(Debug, Clone)]
 enum Message {
-    ChangeTheme(Event<Theme>),
+    /// Updates the current theme.
+    UpdateTheme(Event<Theme>),
 }
 
-#[derive(Default)]
 struct State {
+    /// The theme used by the application.
     theme: Animated<Theme>,
 }
 
+impl Default for State {
+    fn default() -> Self {
+        Self {
+            theme: Animated::new(
+                Theme::Light,
+                Easing::EASE.with_duration(Duration::from_millis(300)),
+            ),
+        }
+    }
+}
+
 impl State {
+    /// Gets the current theme, if any.
+    fn theme(&self) -> Theme {
+        self.theme.value().clone()
+    }
+
     fn update(&mut self, message: Message) {
         match message {
-            Message::ChangeTheme(event) => self.theme.update(event),
+            Message::UpdateTheme(event) => {
+                self.theme.update(event);
+            }
         }
     }
 
-    fn view(&self) -> Element<Message> {
-        Animation::new(
-            &self.theme,
-            container(
-                row![
-                    pick_list(Theme::ALL, Some(self.theme.target().clone()), |theme| {
-                        Message::ChangeTheme(theme.into())
-                    }),
-                    palette_grid(self.theme.value().extended_palette()),
+    fn view(&self) -> Element<'_, Message> {
+        let page = container(
+            row![
+                pick_list(Theme::ALL, Some(self.theme.target()), |theme| {
+                    Message::UpdateTheme(theme.into())
+                }),
+                column![
+                    column![
+                        text("Palette colors").size(20),
+                        palette_grid(self.theme.value().extended_palette()),
+                    ]
+                    .spacing(4),
+                    column![
+                        text("Background colors").size(20),
+                        background_palette_grid(&self.theme.value().extended_palette().background),
+                    ]
+                    .spacing(4),
                 ]
-                .spacing(8),
-            )
-            .padding(8)
-            .style(move |theme: &Theme| container::Style {
-                background: Some(theme.palette().background.into()),
-                ..Default::default()
-            })
-            .width(Length::Fill)
-            .height(Length::Fill),
+                .spacing(16)
+            ]
+            .spacing(8),
         )
-        .on_update(Message::ChangeTheme)
-        .into()
+        .padding(8)
+        .style(move |theme: &Theme| container::Style {
+            background: Some(theme.palette().background.into()),
+            ..Default::default()
+        })
+        .width(Length::Fill)
+        .height(Length::Fill);
+
+        Animation::new(&self.theme, page)
+            .on_update(Message::UpdateTheme)
+            .into()
     }
 }
 
@@ -69,16 +101,16 @@ fn palette_grid<'a>(palette: &Extended) -> Element<'a, Message> {
             palette.success.weak,
         ),
         (
+            "Warning",
+            palette.warning.strong,
+            palette.warning.base,
+            palette.warning.weak,
+        ),
+        (
             "Danger",
             palette.danger.strong,
             palette.danger.base,
             palette.danger.weak,
-        ),
-        (
-            "Background",
-            palette.background.strong,
-            palette.background.base,
-            palette.background.weak,
         ),
     ];
 
@@ -104,9 +136,36 @@ fn palette_grid<'a>(palette: &Extended) -> Element<'a, Message> {
     .into()
 }
 
+fn background_palette_grid(background: &palette::Background) -> Element<'_, Message> {
+    container(column![
+        row![
+            pair_square("Weak Background".to_string(), background.weak),
+            pair_square("Weaker Background".to_string(), background.weaker),
+            pair_square("Weakest Background".to_string(), background.weakest),
+            pair_square("Base Background".to_string(), background.base),
+        ],
+        row![
+            pair_square("Neutral Background".to_string(), background.neutral),
+            pair_square("Strong Background".to_string(), background.strong),
+            pair_square("Stronger Background".to_string(), background.stronger),
+            pair_square("Strongest Background".to_string(), background.strongest),
+        ],
+    ])
+    .padding(1.0)
+    .style(|theme: &iced::Theme| container::Style {
+        border: Border {
+            color: theme.palette().text,
+            width: 1.0,
+            ..Default::default()
+        },
+        ..Default::default()
+    })
+    .into()
+}
+
 fn pair_square<'a>(name: String, pair: Pair) -> Element<'a, Message> {
     tooltip(
-        container(Space::new(Length::Shrink, Length::Shrink))
+        container(space().width(Length::Fill).height(Length::Fill))
             .width(Length::Fixed(48.0))
             .height(Length::Fixed(48.0))
             .style(move |_| container::Style {
@@ -132,7 +191,8 @@ fn pair_square<'a>(name: String, pair: Pair) -> Element<'a, Message> {
 }
 
 pub fn main() -> iced::Result {
-    iced::application("Animated theme", State::update, State::view)
-        .theme(|state| state.theme.value().clone())
+    iced::application(State::default, State::update, State::view)
+        .theme(State::theme)
+        .title("Animated Theme")
         .run()
 }

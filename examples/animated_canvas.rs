@@ -51,7 +51,7 @@ impl Default for AppState {
 }
 
 impl AppState {
-    fn view(&self) -> Element<Message> {
+    fn view(&self) -> Element<'_, Message> {
         Animation::new(
             &self.animated_selection,
             Canvas::new(self).width(Fill).height(Fill),
@@ -111,38 +111,38 @@ impl canvas::Program<Message> for AppState {
     fn update(
         &self,
         _state: &mut Self::State,
-        event: canvas::Event,
+        event: &iced::Event,
         _bounds: Rectangle,
-        _cursor: Cursor,
-    ) -> (canvas::event::Status, Option<Message>) {
+        _cursor: iced::advanced::mouse::Cursor,
+    ) -> Option<canvas::Action<Message>> {
         match event {
             canvas::Event::Mouse(mouse::Event::CursorMoved { position }) => {
                 let Some(index) = self
                     .shapes
                     .iter()
-                    .position(|shape| shape.contains(position))
+                    .position(|shape| shape.contains(*position))
                 else {
-                    return (canvas::event::Status::Ignored, None);
+                    return None;
                 };
 
                 // Don't update the selection if it hasn't changed
                 if index == self.hovered_index {
-                    return (canvas::event::Status::Ignored, None);
+                    return None;
                 }
 
-                (
-                    canvas::event::Status::Captured,
-                    Some(Message::SelectIndex(index)),
-                )
+                Some(Message::SelectIndex(index))
+                    .map(canvas::Action::publish)
+                    .map(canvas::Action::and_capture)
             }
-            _ => (canvas::event::Status::Ignored, None),
+            _ => None,
         }
     }
 }
 
 pub fn main() -> iced::Result {
-    iced::application("Animated canvas", AppState::update, AppState::view)
+    iced::application(AppState::default, AppState::update, AppState::view)
         .window_size(Size::new(1024.0, 768.0))
+        .title("Animated Canvas")
         .run()
 }
 

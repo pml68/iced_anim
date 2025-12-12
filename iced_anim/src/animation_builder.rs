@@ -77,12 +77,11 @@
 use crate::{animate::Animate, animated::Mode, Animated};
 use iced::{
     advanced::{
-        graphics::core::event,
         layout,
         widget::{tree, Tree},
         Widget,
     },
-    Element,
+    Element, Length, Rectangle, Size,
 };
 
 /// A widget that implicitly animates a value anytime it changes.
@@ -179,8 +178,19 @@ where
     T: 'static + Animate,
     Renderer: iced::advanced::Renderer,
 {
-    fn size(&self) -> iced::Size<iced::Length> {
-        self.cached_element.as_widget().size()
+    fn size(&self) -> Size<Length> {
+        let size = self.cached_element.as_widget().size();
+        if size.is_void() {
+            // This tries to avoid issues with void sizes not rendering in columns/rows/stacks
+            // when the animation would set the size to zero. If this is causing problems, file
+            // an issue with a minimal reproducible example or bring it up in the Iced Discord.
+            //
+            // Without this, animating from a non-zero size to zero size will cause the element to
+            // disappear entirely instead of animating down to zero size.
+            Size::new(Length::Shrink, Length::Shrink)
+        } else {
+            size
+        }
     }
 
     fn state(&self) -> tree::State {
@@ -214,24 +224,24 @@ where
     }
 
     fn layout(
-        &self,
+        &mut self,
         tree: &mut Tree,
         renderer: &Renderer,
         limits: &layout::Limits,
     ) -> layout::Node {
         self.cached_element
-            .as_widget()
+            .as_widget_mut()
             .layout(&mut tree.children[0], renderer, limits)
     }
 
     fn operate(
-        &self,
+        &mut self,
         state: &mut Tree,
         layout: layout::Layout<'_>,
         renderer: &Renderer,
         operation: &mut dyn iced::advanced::widget::Operation<()>,
     ) {
-        self.cached_element.as_widget().operate(
+        self.cached_element.as_widget_mut().operate(
             &mut state.children[0],
             layout,
             renderer,
@@ -242,14 +252,16 @@ where
     fn overlay<'b>(
         &'b mut self,
         tree: &'b mut Tree,
-        layout: layout::Layout<'_>,
+        layout: layout::Layout<'b>,
         renderer: &Renderer,
+        viewport: &Rectangle,
         translation: iced::Vector,
     ) -> Option<iced::advanced::overlay::Element<'b, Message, Theme, Renderer>> {
         self.cached_element.as_widget_mut().overlay(
             &mut tree.children[0],
             layout,
             renderer,
+            viewport,
             translation,
         )
     }
@@ -296,20 +308,20 @@ where
         )
     }
 
-    fn on_event(
+    fn update(
         &mut self,
         tree: &mut Tree,
-        event: iced::Event,
+        event: &iced::Event,
         layout: iced::advanced::Layout<'_>,
         cursor: iced::advanced::mouse::Cursor,
         renderer: &Renderer,
         clipboard: &mut dyn iced::advanced::Clipboard,
         shell: &mut iced::advanced::Shell<'_, Message>,
         viewport: &iced::Rectangle,
-    ) -> event::Status {
-        let status = self.cached_element.as_widget_mut().on_event(
+    ) {
+        self.cached_element.as_widget_mut().update(
             &mut tree.children[0],
-            event.clone(),
+            event,
             layout,
             cursor,
             renderer,
@@ -319,25 +331,23 @@ where
         );
 
         let iced::Event::Window(iced::window::Event::RedrawRequested(now)) = event else {
-            return status;
+            return;
         };
 
         let state = tree.state.downcast_mut::<State<T>>();
 
         // Request a redraw if the spring has remaining energy
         if state.animation.is_animating() {
-            shell.request_redraw(iced::window::RedrawRequest::NextFrame);
+            shell.request_redraw();
             // Only invalidate the layout if the user indicates to do so
             if self.animates_layout {
                 shell.invalidate_layout();
             }
 
             // Update the animation and request a redraw
-            state.animation.tick(now);
+            state.animation.tick(*now);
             self.cached_element = (self.builder)(state.animation.value().clone());
         }
-
-        status
     }
 }
 

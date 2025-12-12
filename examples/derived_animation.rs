@@ -57,7 +57,7 @@ impl State {
         }
     }
 
-    fn view(&self) -> Element<Message> {
+    fn view(&self) -> Element<'_, Message> {
         let adjust_button = button(text("Adjust")).on_press(Message::Randomize);
 
         let animated_box = AnimationBuilder::new(self.rectangle.clone(), |rectangle| {
@@ -92,5 +92,7 @@ impl State {
 }
 
 pub fn main() -> iced::Result {
-    iced::run("Derived animation", State::update, State::view)
+    iced::application(State::default, State::update, State::view)
+        .title("Derived Animation")
+        .run()
 }

@@ -5,7 +5,7 @@
 use std::time::Duration;
 
 use iced::{
-    widget::{container, mouse_area, Space},
+    widget::{container, mouse_area, space},
     Border, Color, Element,
     Length::{self, Fill},
     Point, Size, Subscription, Theme,
@@ -56,14 +56,14 @@ impl State {
         })
     }
 
-    fn view(&self) -> Element<Message> {
+    fn view(&self) -> Element<'_, Message> {
         let size = self.size;
         container(
             mouse_area(
                 Animation::new(
                     &self.position,
                     container(
-                        container(Space::new(Length::Fill, Length::Fill))
+                        container(space().width(Length::Fill).height(Length::Fill))
                             .width(self.position.value().x)
                             .height(self.position.value().y)
                             .style(move |_: &Theme| container::Style {
@@ -96,7 +96,8 @@ fn get_color(position: &Point, size: Size) -> Color {
 }
 
 pub fn main() -> iced::Result {
-    iced::application("Stateful Animation", State::update, State::view)
+    iced::application(State::default, State::update, State::view)
         .subscription(State::subscription)
+        .title("Stateful Animation")
         .run()
 }
