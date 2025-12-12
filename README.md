@@ -269,6 +269,13 @@ Refer to the `examples` directory for a variety of ways to use this crate.
 You can also run these examples locally with `cargo run --example <package>`,
 e.g. `cargo run --example animated_color`.
 
+## Iced Compatibility Matrix
+
+| `iced` Version | `iced_anim` Version |
+| ---------------|---------------------|
+| 0.13.x         | 0.2.x               |
+| 0.14.x         | 0.3.x               |
+
 ## Breaking Changes
 
 ### 0.1 -> 0.2
