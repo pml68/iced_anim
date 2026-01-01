@@ -1,18 +1,17 @@
 //! Svg widgets display vector graphics in your application.
 use crate::{animated::Mode, AnimatedState};
-use iced::{
-    advanced::{
-        layout, renderer, svg,
-        widget::{tree, Tree},
-        Layout, Widget,
-    },
+use iced_core::{
+    layout,
     mouse::{self, Cursor},
-    window, ContentFit, Element, Event, Length, Point, Rectangle, Rotation, Size, Vector,
+    renderer, svg,
+    widget::{tree, Tree},
+    window, ContentFit, Element, Event, Layout, Length, Point, Rectangle, Rotation, Size, Vector,
+    Widget,
 };
 use std::path::PathBuf;
 
 // Re-export the widget types for convenience
-pub use iced::widget::svg::{Catalog, Handle, Status, Style, StyleFn};
+pub use iced_widget::svg::{Catalog, Handle, Status, Style, StyleFn};
 
 /// A vector graphics image.
 ///
@@ -21,7 +20,7 @@ pub use iced::widget::svg::{Catalog, Handle, Status, Style, StyleFn};
 /// [`Svg`] images can have a considerable rendering cost when resized,
 /// specially when they are complex.
 #[allow(missing_debug_implementations)]
-pub struct Svg<'a, Theme = iced::Theme>
+pub struct Svg<'a, Theme = iced_core::Theme>
 where
     Theme: Catalog,
 {
@@ -148,7 +147,7 @@ where
 
 impl<'a, Message, Theme, Renderer> Widget<Message, Theme, Renderer> for Svg<'a, Theme>
 where
-    Renderer: iced::advanced::svg::Renderer,
+    Renderer: iced_core::svg::Renderer,
     Theme: Catalog,
 {
     fn tag(&self) -> tree::Tag {
@@ -274,12 +273,12 @@ where
     fn update(
         &mut self,
         tree: &mut Tree,
-        event: &iced::Event,
+        event: &iced_core::Event,
         layout: Layout<'_>,
-        cursor: iced::advanced::mouse::Cursor,
+        cursor: iced_core::mouse::Cursor,
         _renderer: &Renderer,
-        _clipboard: &mut dyn iced::advanced::Clipboard,
-        shell: &mut iced::advanced::Shell<'_, Message>,
+        _clipboard: &mut dyn iced_core::Clipboard,
+        shell: &mut iced_core::Shell<'_, Message>,
         _viewport: &Rectangle,
     ) {
         // Redraw anytime the status changes and would trigger a style change.

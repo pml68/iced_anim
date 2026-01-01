@@ -52,8 +52,8 @@
 //!    a button state might look like this:
 //!    ```no_run
 //!    # use iced_anim::AnimatedState;
-//!    # type Status = iced::widget::button::Status;
-//!    # type Style = iced::widget::button::Style;
+//!    # type Status = iced_widget::button::Status;
+//!    # type Style = iced_widget::button::Style;
 //!    #[derive(Debug)]
 //!    struct State {
 //!        is_pressed: bool,

@@ -16,11 +16,11 @@
 //!
 //! ```rust
 //! # #[derive(Clone)] enum Message { DoSomething }
-//! use iced::{Element, widget::text};
+//! # type Element<'a, Message> = iced_core::Element<'a, Message, iced_core::Theme, iced_widget::Renderer>;
 //! use iced_anim::widget::button;
 //!
 //! fn fancy_button<'a>() -> Element<'a, Message> {
-//!     button(text("Animated button"))
+//!     button("Animated button")
 //!         .on_press(Message::DoSomething)
 //!         .into()
 //! }
@@ -29,18 +29,19 @@
 //! ## Animating types
 //!
 //! You can animate anything that implements [`Animate`]. A handful of common types already
-//! implement [`Animate`] like [`f32`], [`iced::Color`], and [`iced::Theme`], with more to come
+//! implement [`Animate`] like [`f32`], `Color` and `Theme`, with more to come
 //! in the future. You can also derive [`Animate`] on your own types to animate them as well
 //! by enabling the `derive` feature flag and adding `#[derive(Animate)]` to your type:
 //!
 //! ```rust
+//! # use iced_core::Color;
 //! use iced_anim::Animate;
 //!
 //! // Note that animate also requires `Clone` and `PartialEq` impls.
 //! #[derive(Animate, Clone, PartialEq)]
 //! struct MyType {
 //!     size: f32,
-//!     color: iced::Color,
+//!     color: Color,
 //! }
 //! ```
 //!
@@ -51,7 +52,7 @@
 //!
 //! ## Supported Iced versions
 //!
-//! This crate supports Iced 0.13 and newer.
+//! This crate supports Iced 0.14 and newer.
 pub mod animate;
 pub mod animated;
 mod animated_state;

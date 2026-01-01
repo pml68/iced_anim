@@ -1,25 +1,23 @@
 //! An animated button that will automatically transition between different styles.
 use crate::{animated::Mode, AnimatedState};
-use iced::{
-    advanced::{
-        layout, renderer,
-        widget::{tree, Operation, Tree},
-        Clipboard, Layout, Shell, Widget,
-    },
+use iced_core::{
+    layout,
     mouse::{self, Cursor},
-    overlay, touch, window, Background, Color, Element, Event, Length, Padding, Rectangle, Size,
-    Vector,
+    overlay, renderer, touch,
+    widget::{tree, Operation, Tree},
+    window, Background, Clipboard, Color, Element, Event, Layout, Length, Padding, Rectangle,
+    Shell, Size, Vector, Widget,
 };
 
 // Re-export the widget types for convenience
-pub use iced::widget::button::{
+pub use iced_widget::button::{
     danger, primary, secondary, success, text, Catalog, Status, Style, StyleFn,
 };
 
 /// An animated button that will automatically transition between different styles.
-pub struct Button<'a, Message, Theme = iced::Theme, Renderer = iced::Renderer>
+pub struct Button<'a, Message, Theme = iced_core::Theme, Renderer = iced_widget::Renderer>
 where
-    Renderer: iced::advanced::Renderer,
+    Renderer: iced_core::Renderer,
     Theme: Catalog,
 {
     content: Element<'a, Message, Theme, Renderer>,
@@ -48,7 +46,7 @@ impl<'a, Message: Clone> OnPress<'a, Message> {
 
 impl<'a, Message, Theme, Renderer> Button<'a, Message, Theme, Renderer>
 where
-    Renderer: iced::advanced::Renderer,
+    Renderer: iced_core::Renderer,
     Theme: Catalog,
 {
     /// Creates a new [`Button`] with the given content.
@@ -183,7 +181,7 @@ impl<'a, Message, Theme, Renderer> Widget<Message, Theme, Renderer>
     for Button<'a, Message, Theme, Renderer>
 where
     Message: 'a + Clone,
-    Renderer: 'a + iced::advanced::Renderer,
+    Renderer: 'a + iced_core::Renderer,
     Theme: Catalog,
 {
     fn tag(&self) -> tree::Tag {
@@ -424,7 +422,7 @@ impl<'a, Message, Theme, Renderer> From<Button<'a, Message, Theme, Renderer>>
 where
     Message: Clone + 'a,
     Theme: Catalog + 'a,
-    Renderer: iced::advanced::Renderer + 'a,
+    Renderer: iced_core::Renderer + 'a,
 {
     fn from(button: Button<'a, Message, Theme, Renderer>) -> Self {
         Self::new(button)
@@ -444,7 +442,7 @@ pub fn button<'a, Message, Theme, Renderer>(
 ) -> Button<'a, Message, Theme, Renderer>
 where
     Theme: Catalog,
-    Renderer: iced::advanced::Renderer,
+    Renderer: iced_core::Renderer,
 {
     Button::new(content)
 }
