@@ -3,4 +3,6 @@ resolver = "2"
 members = ["iced_anim", "iced_anim_derive", "examples"]
 
 [workspace.dependencies]
-iced = { version = "0.14", features = ["advanced", "svg"] }
+iced = { version = "0.14.0" }
+iced_core = { version = "0.14.0" }
+iced_widget = { version = "0.14.2" }

@@ -4,9 +4,8 @@
 //! Spring/velocity-based animations to make animations interruptible without any jarring effects.
 //!
 //! You can implement this trait for custom types using the "derive" feature.
+use iced_core::{theme::palette, Theme};
 use std::sync::Arc;
-
-use iced::{theme::palette, Theme};
 
 /// A trait for types that can be animated on a per-property basis.
 ///
@@ -62,7 +61,7 @@ impl Animate for f32 {
     }
 }
 
-impl Animate for iced::Point<f32> {
+impl Animate for iced_core::Point<f32> {
     fn components() -> usize {
         2
     }
@@ -82,7 +81,7 @@ impl Animate for iced::Point<f32> {
     }
 }
 
-impl Animate for iced::Color {
+impl Animate for iced_core::Color {
     fn components() -> usize {
         4
     }
@@ -112,9 +111,9 @@ impl Animate for iced::Color {
     }
 }
 
-impl Animate for iced::theme::Palette {
+impl Animate for iced_core::theme::Palette {
     fn components() -> usize {
-        6 * iced::Color::components()
+        6 * iced_core::Color::components()
     }
 
     fn update(&mut self, components: &mut impl Iterator<Item = f32>) {
@@ -151,7 +150,7 @@ impl Animate for iced::theme::Palette {
 
 impl Animate for Theme {
     fn components() -> usize {
-        iced::theme::Palette::components() + iced::theme::palette::Extended::components()
+        iced_core::theme::Palette::components() + iced_core::theme::palette::Extended::components()
     }
 
     fn update(&mut self, components: &mut impl Iterator<Item = f32>) {
@@ -161,7 +160,7 @@ impl Animate for Theme {
         let mut extended = *self.extended_palette();
         extended.update(components);
 
-        *self = Theme::Custom(Arc::new(iced::theme::Custom::with_fn(
+        *self = Theme::Custom(Arc::new(iced_core::theme::Custom::with_fn(
             "Animating Theme".to_owned(),
             palette,
             move |_| extended,
@@ -183,7 +182,7 @@ impl Animate for Theme {
         let mut extended = *start.extended_palette();
         extended.lerp(start.extended_palette(), end.extended_palette(), progress);
 
-        *self = Theme::Custom(Arc::new(iced::theme::Custom::with_fn(
+        *self = Theme::Custom(Arc::new(iced_core::theme::Custom::with_fn(
             "Animating Theme".to_owned(),
             palette,
             move |_| extended,
@@ -193,7 +192,7 @@ impl Animate for Theme {
 
 impl Animate for palette::Pair {
     fn components() -> usize {
-        2 * iced::Color::components()
+        2 * iced_core::Color::components()
     }
 
     fn update(&mut self, components: &mut impl Iterator<Item = f32>) {
@@ -474,7 +473,7 @@ where
     }
 }
 
-impl Animate for iced::border::Radius {
+impl Animate for iced_core::border::Radius {
     fn components() -> usize {
         4
     }
@@ -507,9 +506,9 @@ impl Animate for iced::border::Radius {
     }
 }
 
-impl Animate for iced::Border {
+impl Animate for iced_core::Border {
     fn components() -> usize {
-        f32::components() + iced::Color::components() + iced::border::Radius::components()
+        f32::components() + iced_core::Color::components() + iced_core::border::Radius::components()
     }
 
     fn distance_to(&self, end: &Self) -> Vec<f32> {
@@ -534,7 +533,7 @@ impl Animate for iced::Border {
     }
 }
 
-impl<T> Animate for iced::Vector<T>
+impl<T> Animate for iced_core::Vector<T>
 where
     T: Animate,
 {
@@ -557,7 +556,7 @@ where
     }
 }
 
-impl<T> Animate for iced::Size<T>
+impl<T> Animate for iced_core::Size<T>
 where
     T: Animate,
 {
@@ -584,7 +583,7 @@ where
     }
 }
 
-impl<T> Animate for iced::Rectangle<T>
+impl<T> Animate for iced_core::Rectangle<T>
 where
     T: Animate,
 {
@@ -617,9 +616,9 @@ where
     }
 }
 
-impl Animate for iced::Shadow {
+impl Animate for iced_core::Shadow {
     fn components() -> usize {
-        iced::Color::components() + iced::Vector::<f32>::components() + f32::components()
+        iced_core::Color::components() + iced_core::Vector::<f32>::components() + f32::components()
     }
 
     fn distance_to(&self, end: &Self) -> Vec<f32> {
@@ -645,7 +644,7 @@ impl Animate for iced::Shadow {
     }
 }
 
-impl Animate for iced::Radians {
+impl Animate for iced_core::Radians {
     fn components() -> usize {
         f32::components()
     }
@@ -663,9 +662,9 @@ impl Animate for iced::Radians {
     }
 }
 
-impl Animate for iced::gradient::ColorStop {
+impl Animate for iced_core::gradient::ColorStop {
     fn components() -> usize {
-        f32::components() + iced::Color::components()
+        f32::components() + iced_core::Color::components()
     }
 
     fn distance_to(&self, end: &Self) -> Vec<f32> {
@@ -715,9 +714,9 @@ where
     }
 }
 
-impl Animate for iced::gradient::Linear {
+impl Animate for iced_core::gradient::Linear {
     fn components() -> usize {
-        iced::Radians::components() + 8 * iced::gradient::ColorStop::components()
+        iced_core::Radians::components() + 8 * iced_core::gradient::ColorStop::components()
     }
 
     fn distance_to(&self, end: &Self) -> Vec<f32> {
@@ -749,29 +748,31 @@ impl Animate for iced::gradient::Linear {
     }
 }
 
-impl Animate for iced::Gradient {
+impl Animate for iced_core::Gradient {
     fn components() -> usize {
-        iced::gradient::Linear::components()
+        iced_core::gradient::Linear::components()
     }
 
     fn distance_to(&self, end: &Self) -> Vec<f32> {
         match (self, end) {
-            (iced::Gradient::Linear(start), iced::Gradient::Linear(end)) => start.distance_to(end),
+            (iced_core::Gradient::Linear(start), iced_core::Gradient::Linear(end)) => {
+                start.distance_to(end)
+            }
         }
     }
 
     fn update(&mut self, components: &mut impl Iterator<Item = f32>) {
         match self {
-            iced::Gradient::Linear(start) => start.update(components),
+            iced_core::Gradient::Linear(start) => start.update(components),
         }
     }
 
     fn lerp(&mut self, start: &Self, end: &Self, progress: f32) {
         match (self, start, end) {
             (
-                iced::Gradient::Linear(value),
-                iced::Gradient::Linear(start),
-                iced::Gradient::Linear(end),
+                iced_core::Gradient::Linear(value),
+                iced_core::Gradient::Linear(start),
+                iced_core::Gradient::Linear(end),
             ) => {
                 value.lerp(start, end, progress);
             }
@@ -779,27 +780,27 @@ impl Animate for iced::Gradient {
     }
 }
 
-impl Animate for iced::Background {
+impl Animate for iced_core::Background {
     fn components() -> usize {
-        iced::gradient::Gradient::components().max(iced::Color::components())
+        iced_core::gradient::Gradient::components().max(iced_core::Color::components())
     }
 
     fn distance_to(&self, end: &Self) -> Vec<f32> {
         match (self, end) {
-            (iced::Background::Color(start), iced::Background::Color(end)) => {
+            (iced_core::Background::Color(start), iced_core::Background::Color(end)) => {
                 let mut distance = start.distance_to(end);
                 distance.resize(Self::components(), 0.0);
                 distance
             }
-            (iced::Background::Color(_), iced::Background::Gradient(_)) => {
+            (iced_core::Background::Color(_), iced_core::Background::Gradient(_)) => {
                 vec![0.0; Self::components()]
             }
-            (iced::Background::Gradient(start), iced::Background::Gradient(end)) => {
+            (iced_core::Background::Gradient(start), iced_core::Background::Gradient(end)) => {
                 let mut distance = start.distance_to(end);
                 distance.resize(Self::components(), 0.0);
                 distance
             }
-            (iced::Background::Gradient(_), iced::Background::Color(_)) => {
+            (iced_core::Background::Gradient(_), iced_core::Background::Color(_)) => {
                 vec![0.0; Self::components()]
             }
         }
@@ -807,28 +808,28 @@ impl Animate for iced::Background {
 
     fn update(&mut self, components: &mut impl Iterator<Item = f32>) {
         match self {
-            iced::Background::Color(color) => {
+            iced_core::Background::Color(color) => {
                 color.update(components);
-                let extra = Self::components() - iced::Color::components() - 1;
+                let extra = Self::components() - iced_core::Color::components() - 1;
                 components.nth(extra);
             }
-            iced::Background::Gradient(gradient) => gradient.update(components),
+            iced_core::Background::Gradient(gradient) => gradient.update(components),
         }
     }
 
     fn lerp(&mut self, start: &Self, end: &Self, progress: f32) {
         match (self, start, end) {
             (
-                iced::Background::Color(value),
-                iced::Background::Color(start),
-                iced::Background::Color(end),
+                iced_core::Background::Color(value),
+                iced_core::Background::Color(start),
+                iced_core::Background::Color(end),
             ) => {
                 value.lerp(start, end, progress);
             }
             (
-                iced::Background::Gradient(value),
-                iced::Background::Gradient(start),
-                iced::Background::Gradient(end),
+                iced_core::Background::Gradient(value),
+                iced_core::Background::Gradient(start),
+                iced_core::Background::Gradient(end),
             ) => {
                 value.lerp(start, end, progress);
             }
@@ -837,12 +838,13 @@ impl Animate for iced::Background {
     }
 }
 
-impl Animate for iced::widget::button::Style {
+#[cfg(feature = "widgets")]
+impl Animate for iced_widget::button::Style {
     fn components() -> usize {
-        Option::<iced::Background>::components()
-            + iced::Color::components()
-            + iced::Border::components()
-            + iced::Shadow::components()
+        Option::<iced_core::Background>::components()
+            + iced_core::Color::components()
+            + iced_core::Border::components()
+            + iced_core::Shadow::components()
     }
 
     fn distance_to(&self, end: &Self) -> Vec<f32> {
@@ -872,9 +874,10 @@ impl Animate for iced::widget::button::Style {
     }
 }
 
-impl Animate for iced::widget::svg::Style {
+#[cfg(feature = "widgets")]
+impl Animate for iced_widget::svg::Style {
     fn components() -> usize {
-        Option::<iced::Color>::components()
+        Option::<iced_core::Color>::components()
     }
 
     fn distance_to(&self, end: &Self) -> Vec<f32> {
@@ -993,72 +996,72 @@ mod tests {
 
     #[test]
     fn f32_point_components() {
-        assert_eq!(iced::Point::<f32>::components(), 2);
+        assert_eq!(iced_core::Point::<f32>::components(), 2);
     }
 
     #[test]
     fn f32_color_components() {
-        assert_eq!(iced::Color::components(), 4);
+        assert_eq!(iced_core::Color::components(), 4);
     }
 
     #[test]
     fn color_pair_components() {
         assert_eq!(
-            iced::theme::palette::Pair::components(),
-            2 * iced::Color::components()
+            iced_core::theme::palette::Pair::components(),
+            2 * iced_core::Color::components()
         );
     }
 
     #[test]
     fn primary_components() {
         assert_eq!(
-            iced::theme::palette::Primary::components(),
-            3 * iced::theme::palette::Pair::components()
+            iced_core::theme::palette::Primary::components(),
+            3 * iced_core::theme::palette::Pair::components()
         );
     }
 
     #[test]
     fn secondary_components() {
         assert_eq!(
-            iced::theme::palette::Secondary::components(),
-            3 * iced::theme::palette::Pair::components()
+            iced_core::theme::palette::Secondary::components(),
+            3 * iced_core::theme::palette::Pair::components()
         );
     }
 
     #[test]
     fn success_components() {
         assert_eq!(
-            iced::theme::palette::Success::components(),
-            3 * iced::theme::palette::Pair::components()
+            iced_core::theme::palette::Success::components(),
+            3 * iced_core::theme::palette::Pair::components()
         );
     }
 
     #[test]
     fn danger_components() {
         assert_eq!(
-            iced::theme::palette::Danger::components(),
-            3 * iced::theme::palette::Pair::components()
+            iced_core::theme::palette::Danger::components(),
+            3 * iced_core::theme::palette::Pair::components()
         );
     }
 
     #[test]
     fn background_components() {
         assert_eq!(
-            iced::theme::palette::Background::components(),
-            8 * iced::theme::palette::Pair::components()
+            iced_core::theme::palette::Background::components(),
+            8 * iced_core::theme::palette::Pair::components()
         );
     }
 
     #[test]
     fn extended_palette_components() {
         assert_eq!(
-            iced::theme::palette::Extended::components(),
-            iced::theme::palette::Background::components()
-                + iced::theme::palette::Primary::components()
-                + iced::theme::palette::Secondary::components()
-                + iced::theme::palette::Success::components()
-                + iced::theme::palette::Warning::components()
-                + iced::theme::palette::Danger::components()
+            iced_core::theme::palette::Extended::components(),
+            iced_core::theme::palette::Background::components()
+                + iced_core::theme::palette::Primary::components()
+                + iced_core::theme::palette::Secondary::components()
+                + iced_core::theme::palette::Success::components()
+                + iced_core::theme::palette::Warning::components()
+                + iced_core::theme::palette::Danger::components()
         );
     }
 
@@ -1066,7 +1069,8 @@ mod tests {
     fn theme_components() {
         assert_eq!(
             Theme::components(),
-            iced::theme::Palette::components() + iced::theme::palette::Extended::components()
+            iced_core::theme::Palette::components()
+                + iced_core::theme::palette::Extended::components()
         );
     }
 
@@ -1098,28 +1102,31 @@ mod tests {
 
     #[test]
     fn update_background() {
-        let mut background = iced::Background::Color(iced::Color::BLACK);
-        let components = vec![0.1_f32; iced::Background::components()];
+        let mut background = iced_core::Background::Color(iced_core::Color::BLACK);
+        let components = vec![0.1_f32; iced_core::Background::components()];
         let mut components = components.iter().copied();
         background.update(&mut components);
-        assert_ne!(background, iced::Background::Color(iced::Color::BLACK));
+        assert_ne!(
+            background,
+            iced_core::Background::Color(iced_core::Color::BLACK)
+        );
         assert_eq!(components.len(), 0);
     }
 
     #[test]
     fn update_button_style() {
-        let style = iced::widget::button::Style {
-            background: Some(iced::Background::Color(iced::Color::BLACK)),
-            text_color: iced::Color::BLACK,
-            border: iced::Border::default(),
-            shadow: iced::Shadow::default(),
+        let style = iced_widget::button::Style {
+            background: Some(iced_core::Background::Color(iced_core::Color::BLACK)),
+            text_color: iced_core::Color::BLACK,
+            border: iced_core::Border::default(),
+            shadow: iced_core::Shadow::default(),
             snap: true,
         };
-        let target = iced::widget::button::Style {
-            background: Some(iced::Background::Color(iced::Color::WHITE)),
-            text_color: iced::Color::WHITE,
-            border: iced::Border::default().width(1.0),
-            shadow: iced::Shadow::default(),
+        let target = iced_widget::button::Style {
+            background: Some(iced_core::Background::Color(iced_core::Color::WHITE)),
+            text_color: iced_core::Color::WHITE,
+            border: iced_core::Border::default().width(1.0),
+            shadow: iced_core::Shadow::default(),
             snap: true,
         };
 
