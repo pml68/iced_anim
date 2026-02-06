@@ -5,8 +5,8 @@ use iced_core::{
     mouse::{self, Cursor},
     overlay, renderer, touch,
     widget::{tree, Operation, Tree},
-    window, Background, Clipboard, Color, Element, Event, Layout, Length, Padding, Rectangle,
-    Shell, Size, Vector, Widget,
+    window, Background, Color, Element, Event, Layout, Length, Padding, Rectangle, Shell, Size,
+    Vector, Widget,
 };
 
 // Re-export the widget types for convenience
@@ -255,7 +255,6 @@ where
         layout: Layout<'_>,
         cursor: mouse::Cursor,
         renderer: &Renderer,
-        clipboard: &mut dyn Clipboard,
         shell: &mut Shell<'_, Message>,
         viewport: &Rectangle,
     ) {
@@ -265,7 +264,6 @@ where
             layout.children().next().unwrap(),
             cursor,
             renderer,
-            clipboard,
             shell,
             viewport,
         );

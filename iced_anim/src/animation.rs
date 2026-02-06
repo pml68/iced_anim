@@ -222,7 +222,6 @@ where
         layout: iced_core::Layout<'_>,
         cursor: iced_core::mouse::Cursor,
         renderer: &Renderer,
-        clipboard: &mut dyn iced_core::Clipboard,
         shell: &mut iced_core::Shell<'_, Message>,
         viewport: &iced_core::Rectangle,
     ) {
@@ -232,7 +231,6 @@ where
             layout,
             cursor,
             renderer,
-            clipboard,
             shell,
             viewport,
         );

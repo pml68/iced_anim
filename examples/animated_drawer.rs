@@ -271,13 +271,12 @@ where
         layout: iced::advanced::Layout<'_>,
         cursor: iced::advanced::mouse::Cursor,
         renderer: &Renderer,
-        clipboard: &mut dyn iced::advanced::Clipboard,
         shell: &mut iced::advanced::Shell<'_, Message>,
         viewport: &iced::Rectangle,
     ) {
-        self.content.as_widget_mut().update(
-            state, event, layout, cursor, renderer, clipboard, shell, viewport,
-        );
+        self.content
+            .as_widget_mut()
+            .update(state, event, layout, cursor, renderer, shell, viewport);
     }
 
     fn operate(
