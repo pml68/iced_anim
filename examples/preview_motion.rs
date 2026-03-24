@@ -147,17 +147,19 @@ impl State {
 
         let animation_picker: Element<Message> = if self.is_spring {
             pick_list(
-                MOTIONS,
                 Some(self.preview_motion.clone()),
-                Message::ChangeMotion,
+                MOTIONS,
+                PreviewMotion::to_string,
             )
+            .on_select(Message::ChangeMotion)
             .into()
         } else {
             pick_list(
-                EASINGS,
                 Some(self.preview_easing.clone()),
-                Message::ChangeCurve,
+                EASINGS,
+                PreviewEasing::to_string,
             )
+            .on_select(Message::ChangeCurve)
             .into()
         };
 
@@ -273,7 +275,7 @@ fn circle<'a>(offset: Option<f32>, is_horizontal: bool) -> Element<'a, Message> 
             let color = if let Some(offset) = offset {
                 circle_color(offset, is_horizontal)
             } else {
-                theme.palette().text
+                theme.seed().text
             };
             iced::widget::container::Style {
                 border: Border {

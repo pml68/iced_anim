@@ -63,7 +63,7 @@ impl Base for Theme {
         }
     }
 
-    fn palette(&self) -> Option<iced::theme::Palette> {
+    fn seed(&self) -> Option<iced::theme::palette::Seed> {
         None
     }
 

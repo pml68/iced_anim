@@ -1,7 +1,7 @@
 use std::time::Duration;
 
 use iced::{
-    theme::palette::{self, Extended, Pair},
+    theme::palette::{self, Pair, Palette},
     widget::{column, container, pick_list, row, space, text, tooltip, Row},
     Border, Element, Length, Theme,
 };
@@ -46,18 +46,17 @@ impl State {
     fn view(&self) -> Element<'_, Message> {
         let page = container(
             row![
-                pick_list(Theme::ALL, Some(self.theme.target()), |theme| {
-                    Message::UpdateTheme(theme.into())
-                }),
+                pick_list(Some(self.theme.target()), Theme::ALL, Theme::to_string)
+                    .on_select(|theme| { Message::UpdateTheme(theme.into()) }),
                 column![
                     column![
                         text("Palette colors").size(20),
-                        palette_grid(self.theme.value().extended_palette()),
+                        palette_grid(self.theme.value().palette()),
                     ]
                     .spacing(4),
                     column![
                         text("Background colors").size(20),
-                        background_palette_grid(&self.theme.value().extended_palette().background),
+                        background_palette_grid(&self.theme.value().palette().background),
                     ]
                     .spacing(4),
                 ]
@@ -67,7 +66,7 @@ impl State {
         )
         .padding(8)
         .style(move |theme: &Theme| container::Style {
-            background: Some(theme.palette().background.into()),
+            background: Some(theme.seed().background.into()),
             ..Default::default()
         })
         .width(Length::Fill)
@@ -79,7 +78,7 @@ impl State {
     }
 }
 
-fn palette_grid<'a>(palette: &Extended) -> Element<'a, Message> {
+fn palette_grid<'a>(palette: &Palette) -> Element<'a, Message> {
     // The various shades of a palette
     let shades = [
         (
@@ -127,7 +126,7 @@ fn palette_grid<'a>(palette: &Extended) -> Element<'a, Message> {
     .padding(1.0)
     .style(|theme: &iced::Theme| container::Style {
         border: Border {
-            color: theme.palette().text,
+            color: theme.seed().text,
             width: 1.0,
             ..Default::default()
         },
@@ -154,7 +153,7 @@ fn background_palette_grid(background: &palette::Background) -> Element<'_, Mess
     .padding(1.0)
     .style(|theme: &iced::Theme| container::Style {
         border: Border {
-            color: theme.palette().text,
+            color: theme.seed().text,
             width: 1.0,
             ..Default::default()
         },
@@ -173,12 +172,12 @@ fn pair_square<'a>(name: String, pair: Pair) -> Element<'a, Message> {
                 ..Default::default()
             }),
         container(text(name).style(|theme: &iced::Theme| text::Style {
-            color: Some(theme.palette().text),
+            color: Some(theme.seed().text),
         }))
         .style(|theme: &iced::Theme| container::Style {
-            background: Some(theme.extended_palette().background.weak.color.into()),
+            background: Some(theme.palette().background.weak.color.into()),
             border: Border {
-                color: theme.extended_palette().background.base.color,
+                color: theme.palette().background.base.color,
                 width: 1.0,
                 radius: 6.0.into(),
             },

@@ -41,11 +41,11 @@ impl State {
             container(text(size as isize))
                 .style(move |theme: &iced::Theme| iced::widget::container::Style {
                     border: Border {
-                        color: theme.extended_palette().secondary.strong.color,
+                        color: theme.palette().secondary.strong.color,
                         width: 1.0,
                         radius: 6.0.into(),
                     },
-                    background: Some(theme.extended_palette().secondary.weak.color.into()),
+                    background: Some(theme.palette().secondary.weak.color.into()),
                     ..Default::default()
                 })
                 .center(size)
