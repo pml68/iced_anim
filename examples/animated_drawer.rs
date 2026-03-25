@@ -126,9 +126,7 @@ fn drawer<'a>(
                     container(
                         container(drawer_content(count))
                             .style(move |theme: &Theme| iced::widget::container::Style {
-                                background: Some(
-                                    theme.extended_palette().background.base.color.into(),
-                                ),
+                                background: Some(theme.palette().background.base.color.into()),
                                 border: Border::default().rounded(8),
                                 ..Default::default()
                             })
@@ -165,7 +163,7 @@ fn drawer_content(count: usize) -> Element<'static, Message> {
                 .on_press(Message::ToggleDrawer)
                 .style(|theme: &Theme, _status| {
                     iced::widget::button::Style {
-                        text_color: theme.extended_palette().primary.base.color,
+                        text_color: theme.palette().primary.base.color,
                         background: Some(Color::TRANSPARENT.into()),
                         ..Default::default()
                     }

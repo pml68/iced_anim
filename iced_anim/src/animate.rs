@@ -111,7 +111,7 @@ impl Animate for iced_core::Color {
     }
 }
 
-impl Animate for iced_core::theme::Palette {
+impl Animate for iced_core::theme::palette::Seed {
     fn components() -> usize {
         6 * iced_core::Color::components()
     }
@@ -150,42 +150,42 @@ impl Animate for iced_core::theme::Palette {
 
 impl Animate for Theme {
     fn components() -> usize {
-        iced_core::theme::Palette::components() + iced_core::theme::palette::Extended::components()
+        iced_core::theme::Palette::components() + iced_core::theme::palette::Seed::components()
     }
 
     fn update(&mut self, components: &mut impl Iterator<Item = f32>) {
-        let mut palette = self.palette();
-        palette.update(components);
+        let mut seed = self.seed();
+        seed.update(components);
 
-        let mut extended = *self.extended_palette();
-        extended.update(components);
+        let mut palette = *self.palette();
+        palette.update(components);
 
         *self = Theme::Custom(Arc::new(iced_core::theme::Custom::with_fn(
             "Animating Theme".to_owned(),
-            palette,
-            move |_| extended,
+            seed,
+            move |_| palette,
         )))
     }
 
     fn distance_to(&self, end: &Self) -> Vec<f32> {
         [
-            self.palette().distance_to(&end.palette()),
-            self.extended_palette().distance_to(end.extended_palette()),
+            self.seed().distance_to(&end.seed()),
+            self.palette().distance_to(end.palette()),
         ]
         .concat()
     }
 
     fn lerp(&mut self, start: &Self, end: &Self, progress: f32) {
-        let mut palette = start.palette();
-        palette.lerp(&start.palette(), &end.palette(), progress);
+        let mut seed = start.seed();
+        seed.lerp(&start.seed(), &end.seed(), progress);
 
-        let mut extended = *start.extended_palette();
-        extended.lerp(start.extended_palette(), end.extended_palette(), progress);
+        let mut palette = *start.palette();
+        palette.lerp(start.palette(), end.palette(), progress);
 
         *self = Theme::Custom(Arc::new(iced_core::theme::Custom::with_fn(
             "Animating Theme".to_owned(),
-            palette,
-            move |_| extended,
+            seed,
+            move |_| palette,
         )));
     }
 }
@@ -214,138 +214,30 @@ impl Animate for palette::Pair {
     }
 }
 
-impl Animate for palette::Primary {
+impl Animate for palette::Swatch {
     fn components() -> usize {
         3 * palette::Pair::components()
     }
 
     fn update(&mut self, components: &mut impl Iterator<Item = f32>) {
-        self.strong.update(components);
         self.base.update(components);
         self.weak.update(components);
+        self.strong.update(components);
     }
 
     fn distance_to(&self, end: &Self) -> Vec<f32> {
         [
-            self.strong.distance_to(&end.strong),
             self.base.distance_to(&end.base),
             self.weak.distance_to(&end.weak),
+            self.strong.distance_to(&end.strong),
         ]
         .concat()
     }
 
     fn lerp(&mut self, start: &Self, end: &Self, progress: f32) {
-        self.strong.lerp(&start.strong, &end.strong, progress);
         self.base.lerp(&start.base, &end.base, progress);
         self.weak.lerp(&start.weak, &end.weak, progress);
-    }
-}
-
-impl Animate for palette::Secondary {
-    fn components() -> usize {
-        3 * palette::Pair::components()
-    }
-
-    fn update(&mut self, components: &mut impl Iterator<Item = f32>) {
-        self.strong.update(components);
-        self.base.update(components);
-        self.weak.update(components);
-    }
-
-    fn distance_to(&self, end: &Self) -> Vec<f32> {
-        [
-            self.strong.distance_to(&end.strong),
-            self.base.distance_to(&end.base),
-            self.weak.distance_to(&end.weak),
-        ]
-        .concat()
-    }
-
-    fn lerp(&mut self, start: &Self, end: &Self, progress: f32) {
         self.strong.lerp(&start.strong, &end.strong, progress);
-        self.base.lerp(&start.base, &end.base, progress);
-        self.weak.lerp(&start.weak, &end.weak, progress);
-    }
-}
-
-impl Animate for palette::Success {
-    fn components() -> usize {
-        3 * palette::Pair::components()
-    }
-
-    fn update(&mut self, components: &mut impl Iterator<Item = f32>) {
-        self.strong.update(components);
-        self.base.update(components);
-        self.weak.update(components);
-    }
-
-    fn distance_to(&self, end: &Self) -> Vec<f32> {
-        [
-            self.strong.distance_to(&end.strong),
-            self.base.distance_to(&end.base),
-            self.weak.distance_to(&end.weak),
-        ]
-        .concat()
-    }
-
-    fn lerp(&mut self, start: &Self, end: &Self, progress: f32) {
-        self.strong.lerp(&start.strong, &end.strong, progress);
-        self.base.lerp(&start.base, &end.base, progress);
-        self.weak.lerp(&start.weak, &end.weak, progress);
-    }
-}
-
-impl Animate for palette::Warning {
-    fn components() -> usize {
-        3 * palette::Pair::components()
-    }
-
-    fn update(&mut self, components: &mut impl Iterator<Item = f32>) {
-        self.strong.update(components);
-        self.base.update(components);
-        self.weak.update(components);
-    }
-
-    fn distance_to(&self, end: &Self) -> Vec<f32> {
-        [
-            self.strong.distance_to(&end.strong),
-            self.base.distance_to(&end.base),
-            self.weak.distance_to(&end.weak),
-        ]
-        .concat()
-    }
-
-    fn lerp(&mut self, start: &Self, end: &Self, progress: f32) {
-        self.strong.lerp(&start.strong, &end.strong, progress);
-        self.base.lerp(&start.base, &end.base, progress);
-        self.weak.lerp(&start.weak, &end.weak, progress);
-    }
-}
-
-impl Animate for palette::Danger {
-    fn components() -> usize {
-        3 * palette::Pair::components()
-    }
-
-    fn update(&mut self, components: &mut impl Iterator<Item = f32>) {
-        self.strong.update(components);
-        self.base.update(components);
-        self.weak.update(components);
-    }
-
-    fn distance_to(&self, end: &Self) -> Vec<f32> {
-        [
-            self.strong.distance_to(&end.strong),
-            self.base.distance_to(&end.base),
-            self.weak.distance_to(&end.weak),
-        ]
-        .concat()
-    }
-
-    fn lerp(&mut self, start: &Self, end: &Self, progress: f32) {
-        self.strong.lerp(&start.strong, &end.strong, progress);
-        self.base.lerp(&start.base, &end.base, progress);
-        self.weak.lerp(&start.weak, &end.weak, progress);
     }
 }
 
@@ -355,51 +247,46 @@ impl Animate for palette::Background {
     }
 
     fn update(&mut self, components: &mut impl Iterator<Item = f32>) {
-        self.strongest.update(components);
-        self.stronger.update(components);
-        self.strong.update(components);
         self.base.update(components);
-        self.neutral.update(components);
-        self.weak.update(components);
-        self.weaker.update(components);
         self.weakest.update(components);
+        self.weaker.update(components);
+        self.weak.update(components);
+        self.neutral.update(components);
+        self.strong.update(components);
+        self.stronger.update(components);
+        self.strongest.update(components);
     }
 
     fn distance_to(&self, end: &Self) -> Vec<f32> {
         [
-            self.strongest.distance_to(&end.strongest),
-            self.stronger.distance_to(&end.stronger),
-            self.strong.distance_to(&end.strong),
             self.base.distance_to(&end.base),
-            self.neutral.distance_to(&end.neutral),
-            self.weak.distance_to(&end.weak),
-            self.weaker.distance_to(&end.weaker),
             self.weakest.distance_to(&end.weakest),
+            self.weaker.distance_to(&end.weaker),
+            self.weak.distance_to(&end.weak),
+            self.neutral.distance_to(&end.neutral),
+            self.strong.distance_to(&end.strong),
+            self.stronger.distance_to(&end.stronger),
+            self.strongest.distance_to(&end.strongest),
         ]
         .concat()
     }
 
     fn lerp(&mut self, start: &Self, end: &Self, progress: f32) {
+        self.base.lerp(&start.base, &end.base, progress);
+        self.weakest.lerp(&start.weakest, &end.weakest, progress);
+        self.weaker.lerp(&start.weaker, &end.weaker, progress);
+        self.weak.lerp(&start.weak, &end.weak, progress);
+        self.neutral.lerp(&start.neutral, &end.neutral, progress);
+        self.strong.lerp(&start.strong, &end.strong, progress);
+        self.stronger.lerp(&start.stronger, &end.stronger, progress);
         self.strongest
             .lerp(&start.strongest, &end.strongest, progress);
-        self.stronger.lerp(&start.stronger, &end.stronger, progress);
-        self.strong.lerp(&start.strong, &end.strong, progress);
-        self.base.lerp(&start.base, &end.base, progress);
-        self.neutral.lerp(&start.neutral, &end.neutral, progress);
-        self.weak.lerp(&start.weak, &end.weak, progress);
-        self.weaker.lerp(&start.weaker, &end.weaker, progress);
-        self.weakest.lerp(&start.weakest, &end.weakest, progress);
     }
 }
 
-impl Animate for palette::Extended {
+impl Animate for iced_core::theme::Palette {
     fn components() -> usize {
-        palette::Background::components()
-            + palette::Primary::components()
-            + palette::Secondary::components()
-            + palette::Success::components()
-            + palette::Warning::components()
-            + palette::Danger::components()
+        palette::Background::components() + palette::Swatch::components() * 5
     }
 
     fn update(&mut self, components: &mut impl Iterator<Item = f32>) {
@@ -1013,33 +900,9 @@ mod tests {
     }
 
     #[test]
-    fn primary_components() {
+    fn swatch_components() {
         assert_eq!(
-            iced_core::theme::palette::Primary::components(),
-            3 * iced_core::theme::palette::Pair::components()
-        );
-    }
-
-    #[test]
-    fn secondary_components() {
-        assert_eq!(
-            iced_core::theme::palette::Secondary::components(),
-            3 * iced_core::theme::palette::Pair::components()
-        );
-    }
-
-    #[test]
-    fn success_components() {
-        assert_eq!(
-            iced_core::theme::palette::Success::components(),
-            3 * iced_core::theme::palette::Pair::components()
-        );
-    }
-
-    #[test]
-    fn danger_components() {
-        assert_eq!(
-            iced_core::theme::palette::Danger::components(),
+            iced_core::theme::palette::Swatch::components(),
             3 * iced_core::theme::palette::Pair::components()
         );
     }
@@ -1053,15 +916,11 @@ mod tests {
     }
 
     #[test]
-    fn extended_palette_components() {
+    fn palette_components() {
         assert_eq!(
-            iced_core::theme::palette::Extended::components(),
+            iced_core::theme::Palette::components(),
             iced_core::theme::palette::Background::components()
-                + iced_core::theme::palette::Primary::components()
-                + iced_core::theme::palette::Secondary::components()
-                + iced_core::theme::palette::Success::components()
-                + iced_core::theme::palette::Warning::components()
-                + iced_core::theme::palette::Danger::components()
+                + iced_core::theme::palette::Swatch::components() * 5
         );
     }
 
@@ -1069,8 +928,7 @@ mod tests {
     fn theme_components() {
         assert_eq!(
             Theme::components(),
-            iced_core::theme::Palette::components()
-                + iced_core::theme::palette::Extended::components()
+            iced_core::theme::Palette::components() + iced_core::theme::palette::Seed::components()
         );
     }
 

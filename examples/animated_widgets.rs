@@ -81,7 +81,7 @@ impl State {
 
 pub fn main() -> iced::Result {
     iced::application(State::default, State::update, State::view)
-        .theme(|_: &State| iced::Theme::CatppuccinFrappe)
+        .theme(iced::Theme::CatppuccinFrappe)
         .title("Animated Widgets")
         .run()
 }
@@ -105,7 +105,7 @@ static DISABLED_GRADIENT: LazyLock<Gradient> = LazyLock::new(|| {
 });
 
 fn danger_gradient(theme: &Theme, status: Status) -> iced::widget::button::Style {
-    let danger = theme.extended_palette().danger;
+    let danger = theme.palette().danger;
     let gradient = match status {
         Status::Disabled => *DISABLED_GRADIENT,
         Status::Active => Gradient::Linear(Linear::new(0).add_stops([
@@ -146,7 +146,7 @@ fn danger_gradient(theme: &Theme, status: Status) -> iced::widget::button::Style
 }
 
 fn success_gradient(theme: &Theme, status: Status) -> iced::widget::button::Style {
-    let success = theme.extended_palette().success;
+    let success = theme.palette().success;
     let gradient = match status {
         Status::Disabled => *DISABLED_GRADIENT,
         Status::Active => Gradient::Linear(Linear::new(0).add_stops([
