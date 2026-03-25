@@ -284,7 +284,7 @@ impl Animate for palette::Background {
     }
 }
 
-impl Animate for iced_widget::theme::Palette {
+impl Animate for iced_core::theme::Palette {
     fn components() -> usize {
         palette::Background::components() + palette::Swatch::components() * 5
     }
