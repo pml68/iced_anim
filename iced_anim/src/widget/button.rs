@@ -288,18 +288,18 @@ where
                 state.animated_state.tick(*now);
             }
             Event::Mouse(mouse::Event::ButtonPressed(mouse::Button::Left))
-            | Event::Touch(touch::Event::FingerPressed { .. }) => {
-                if self.on_press.is_some() {
-                    let bounds = layout.bounds();
+            | Event::Touch(touch::Event::FingerPressed { .. })
+                if self.on_press.is_some() =>
+            {
+                let bounds = layout.bounds();
 
-                    if cursor.is_over(bounds) {
-                        let state = tree.state.downcast_mut::<State>();
+                if cursor.is_over(bounds) {
+                    let state = tree.state.downcast_mut::<State>();
 
-                        state.is_pressed = true;
-                        shell.request_redraw();
+                    state.is_pressed = true;
+                    shell.request_redraw();
 
-                        shell.capture_event();
-                    }
+                    shell.capture_event();
                 }
             }
             Event::Mouse(mouse::Event::ButtonReleased(mouse::Button::Left))
