@@ -1,5 +1,5 @@
 //! Motion that defines how a spring animation will behave.
-use std::time::Duration;
+use iced_core::time::Duration;
 
 use crate::animated::DEFAULT_DURATION;
 

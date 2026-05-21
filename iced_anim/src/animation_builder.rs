@@ -17,7 +17,7 @@
 //! ```rust
 //! # use iced_widget::{container, text};
 //! # use iced_anim::{AnimationBuilder, transition::Easing};
-//! # use std::time::Duration;
+//! # use iced_core::time::Duration;
 //! # type Element<'a, Message> = iced_core::Element<'a, Message, iced_core::Theme, iced_widget::Renderer>;
 //! # struct State {
 //! #     size: f32,

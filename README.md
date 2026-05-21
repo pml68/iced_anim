@@ -247,7 +247,7 @@ defaults like `Easing::EASE_OUT` and `Motion::BOUNCY`, but you can create your
 own as well.
 
 ```rust
-use std::time::Duration;
+use iced::time::Duration;
 use iced::widget::{container, text};
 use iced_anim::{AnimationBuilder, spring::Motion};
 

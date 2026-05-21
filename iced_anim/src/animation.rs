@@ -9,7 +9,7 @@
 //!
 //! # Example
 //! ```rust
-//! use std::time::Duration;
+//! use iced_core::time::Duration;
 //! use iced_widget::{button, text, Row};
 //! use iced_anim::{Animation, Animated, Event, transition::Easing};
 //!
@@ -53,9 +53,7 @@
 //!     }
 //! }
 //! ```
-use std::time::Instant;
-
-use iced_core::{widget::Tree, Element, Rectangle, Widget};
+use iced_core::{time::Instant, widget::Tree, Element, Rectangle, Widget};
 
 use crate::{Animate, Animated, Event};
 

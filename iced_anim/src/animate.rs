@@ -990,7 +990,7 @@ mod tests {
 
         let mut spring = crate::Spring::new(style);
         spring.set_target(target);
-        spring.tick(std::time::Instant::now());
+        spring.tick(iced_core::time::Instant::now());
         assert_ne!(*spring.value(), style);
     }
 }

@@ -1,6 +1,5 @@
-use std::time::Duration;
-
 use iced::{
+    time::Duration,
     widget::{container, space, MouseArea},
     Border, Color, Element, Length, Padding, Point, Size, Subscription, Theme,
 };

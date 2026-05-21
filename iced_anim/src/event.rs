@@ -22,7 +22,7 @@
 //! assert_eq!(spring_2.target(), &5.0);
 //! ```
 use crate::Animate;
-use std::time::Instant;
+use iced_core::time::Instant;
 
 /// An event associated with an animated `Spring` value.
 ///

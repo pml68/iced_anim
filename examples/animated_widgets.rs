@@ -1,5 +1,6 @@
 use iced::{
     gradient::{ColorStop, Linear},
+    time::Duration,
     widget::{checkbox, column, container, row, text},
     Alignment::Center,
     Background, Border, Color, Element, Gradient,
@@ -11,7 +12,7 @@ use iced_anim::{
     transition::Easing,
     widget::button::{button, danger, primary, Status},
 };
-use std::{f32::consts::PI, sync::LazyLock, time::Duration};
+use std::{f32::consts::PI, sync::LazyLock};
 
 #[derive(Debug, Clone)]
 enum Message {
