@@ -2,9 +2,8 @@
 //! the `AnimationBuilder` widget. Stateful animations store the animation
 //! within the app state whereas the `AnimationBuilder` widget stores the
 //! animation within the widget tree.
-use std::time::Duration;
-
 use iced::{
+    time::Duration,
     widget::{container, mouse_area, space},
     Border, Color, Element,
     Length::{self, Fill},

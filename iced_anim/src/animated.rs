@@ -7,8 +7,8 @@ use crate::{
     Animate, Event, Spring,
 };
 pub use animation_type::AnimationType;
+use iced_core::time::{Duration, Instant};
 pub use mode::Mode;
-use std::time::{Duration, Instant};
 
 /// The default duration used by animations.
 pub const DEFAULT_DURATION: Duration = Duration::from_millis(500);

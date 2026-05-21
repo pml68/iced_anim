@@ -96,10 +96,9 @@
 //! 8. Finally, ensure your widget handles [`iced::window::Event::RedrawRequested`] events by
 //!    calling [`AnimatedState::tick`] to update the animated value with the current time. This
 //!    is how the animated state can update the value over time.
-use std::{
-    cell::{Ref, RefCell},
-    time::Instant,
-};
+use std::cell::{Ref, RefCell};
+
+use iced_core::time::Instant;
 
 use crate::{animated::Mode, Animate, Animated};
 

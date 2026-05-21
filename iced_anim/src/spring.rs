@@ -2,10 +2,9 @@
 pub mod motion;
 
 pub use motion::Motion;
-use std::{
-    fmt::Debug,
-    time::{Duration, Instant},
-};
+use std::fmt::Debug;
+
+use iced_core::time::{Duration, Instant};
 
 use crate::{event::Event, Animate};
 
@@ -131,7 +130,7 @@ where
     /// spring.update(Event::Target(5.0));
     /// assert_eq!(spring.target(), &5.0);
     ///
-    /// spring.update(Event::Tick(std::time::Instant::now()));
+    /// spring.update(Event::Tick(iced_core::time::Instant::now()));
     /// assert!(*spring.value() > 0.0);
     ///
     /// spring.update(Event::Settle);
@@ -258,7 +257,7 @@ where
 
 #[cfg(test)]
 mod tests {
-    use std::time::Duration;
+    use iced_core::time::Duration;
 
     use super::*;
 

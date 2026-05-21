@@ -1,7 +1,6 @@
-use std::time::Duration;
-
 use iced::{
     theme::palette::{self, Pair, Palette},
+    time::Duration,
     widget::{column, container, pick_list, row, space, text, tooltip, Row},
     Border, Element, Length, Theme,
 };

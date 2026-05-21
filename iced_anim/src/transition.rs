@@ -7,8 +7,8 @@ mod progress;
 use crate::{Animate, Event};
 pub use curve::Curve;
 pub use easing::Easing;
+use iced_core::time::{Duration, Instant};
 pub use progress::Progress;
-use std::time::{Duration, Instant};
 
 /// A type of animation that transitions between two values.
 #[derive(Debug, Clone, PartialEq)]

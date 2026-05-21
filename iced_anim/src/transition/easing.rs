@@ -1,7 +1,7 @@
 use crate::animated::DEFAULT_DURATION;
 
 use super::Curve;
-use std::time::Duration;
+use iced_core::time::Duration;
 
 /// A configuration for creating a `Transition`.
 #[derive(Debug, Clone, Copy, PartialEq)]
