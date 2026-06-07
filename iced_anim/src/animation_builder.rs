@@ -221,7 +221,7 @@ where
             state.animation.apply(self.mode);
         }
 
-        self.cached_element.as_widget_mut().diff(tree);
+        tree.diff_children(std::slice::from_mut(&mut self.cached_element));
     }
 
     fn layout(

@@ -120,7 +120,7 @@ where
     }
 
     fn diff(&mut self, tree: &mut iced_core::widget::Tree) {
-        self.content.as_widget_mut().diff(tree);
+        tree.diff_children(std::slice::from_mut(&mut self.content));
     }
 
     fn mouse_interaction(
