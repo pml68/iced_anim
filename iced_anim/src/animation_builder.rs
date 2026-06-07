@@ -205,7 +205,7 @@ where
         tree::Tag::of::<State<T>>()
     }
 
-    fn diff(&self, tree: &mut Tree) {
+    fn diff(&mut self, tree: &mut Tree) {
         // Update the spring's target if it has changed
         let state = tree.state.downcast_mut::<State<T>>();
         if state.animation.target() != &self.target {
@@ -221,7 +221,7 @@ where
             state.animation.apply(self.mode);
         }
 
-        tree.diff_children(std::slice::from_ref(&self.cached_element));
+        self.cached_element.as_widget_mut().diff(tree);
     }
 
     fn layout(
@@ -282,10 +282,6 @@ where
             viewport,
             renderer,
         )
-    }
-
-    fn children(&self) -> Vec<Tree> {
-        vec![Tree::new(&self.cached_element)]
     }
 
     fn draw(
